@@ -14,9 +14,10 @@ Node::Node(string descrip, int lat, int longit) {
     longitude = longit;
 }
 
-bool Node::addConnection(Node* node) {
+void Node::addConnection(Node* node) {
     int distance = calcDist(node);
-    connectedNodes.push_back(pair(node, distance));
+    pair<Node*, int> addPair(node, distance);
+    connectedNodes.push_back(addPair);
 }
 
 float Node::calcDist(Node* node) {

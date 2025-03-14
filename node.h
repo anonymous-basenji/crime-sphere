@@ -19,6 +19,6 @@ class Node {
         vector<pair<Node*, int>> connectedNodes; // node in each pair is node curr node is connected to, 
                                                  // int is distance from curr node to that node
 
-        bool addConnection(Node* node); // distance calculated in this function
+        void addConnection(Node* node); // distance calculated in this function
         float calcDist(Node* node); // gets distance w/out connecting both nodes
 };
