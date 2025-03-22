@@ -10,11 +10,12 @@
 using namespace std;
 
 /* ========= Init vectors ========= */
-vector<string> FileProcessing::crimeDates;
-vector<string> FileProcessing::crimeAreaNames;
-vector<string> FileProcessing::crimeTypes;
 vector<double> FileProcessing::crimeLongitudes;
 vector<double> FileProcessing::crimeLatitudes;
+vector<int> FileProcessing::crimeRadii;
+vector<string> FileProcessing::crimeTypes;
+vector<string> FileProcessing::crimeDates;
+vector<string> FileProcessing::crimeAreaNames;
 
 FileProcessing::FileProcessing() = default;
 
@@ -63,7 +64,30 @@ void FileProcessing::ReadFile() {
     }
 }
 
+void FileProcessing::addSearchParameters(const double latitude, const double longitude, const int radius) {
+    crimeLatitudes.push_back(latitude);
+    crimeLongitudes.push_back(longitude);
+    crimeRadii.push_back(radius);
+}
+
+void FileProcessing::addCrimeTypeParameters(const string& type, const int radius) {
+    crimeTypes.push_back(type);
+    crimeRadii.push_back(radius);
+}
+
 /* ========= Getters ========= */
+vector<double> FileProcessing::getCrimeLongitude() {
+    return crimeLongitudes;
+}
+
+vector<double> FileProcessing::getCrimeLatitude() {
+    return crimeLatitudes;
+}
+
+vector<int> FileProcessing::getCrimeRadii() {
+    return crimeRadii;
+}
+
 vector<string> FileProcessing::getCrimeDate() {
     return crimeDates;
 }
@@ -76,10 +100,3 @@ vector<string> FileProcessing::getCrimeType() {
     return crimeTypes;
 }
 
-vector<double> FileProcessing::getCrimeLongitude() {
-    return crimeLongitudes;
-}
-
-vector<double> FileProcessing::getCrimeLatitude() {
-    return crimeLatitudes;
-}

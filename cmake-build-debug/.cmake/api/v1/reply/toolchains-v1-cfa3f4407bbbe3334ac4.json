@@ -57,12 +57,9 @@
 					[
 						"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk/System/Library/Frameworks"
 					],
-					"linkLibraries" : 
-					[
-						"c++"
-					]
+					"linkLibraries" : []
 				},
-				"path" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++",
+				"path" : "/usr/bin/g++",
 				"version" : "16.0.0.16000026"
 			},
 			"language" : "CXX",
