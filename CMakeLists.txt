@@ -1,20 +1,43 @@
 cmake_minimum_required(VERSION 3.29)
-project(crime-sphere)
+project(crime-sphere LANGUAGES CXX)
 
-# Set C++ standard
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# Force using GCC compiler
-set(CMAKE_CXX_COMPILER "/usr/bin/g++")
+# Use shared libraries on macOS to avoid linking issues
+if(APPLE)
+    option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+else()
+    option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+endif()
 
-# Add source files
-add_executable(
-        crime-sphere
+include(FetchContent)
+FetchContent_Declare(SFML
+        GIT_REPOSITORY https://github.com/SFML/SFML.git
+        GIT_TAG 2.6.x
+        GIT_SHALLOW ON
+        EXCLUDE_FROM_ALL
+        SYSTEM)
+FetchContent_MakeAvailable(SFML)
+
+add_executable(main
         main.cpp
         FileProcessing.cpp
         Helpers.cpp
-)
+        Frame.cpp
+        Frame.h)
 
-# Link against standard C++ library
-target_link_libraries(crime-sphere stdc++)
+target_link_libraries(main PRIVATE sfml-graphics)
+target_compile_features(main PRIVATE cxx_std_17)
+
+# On macOS, make sure to link against the C++ standard library
+if(APPLE)
+    target_link_libraries(main PRIVATE "-lstdc++")
+endif()
+
+if(WIN32)
+    add_custom_command(
+            TARGET main
+            COMMENT "Copy OpenAL DLL"
+            PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/extlibs/bin/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,x64,x86>/openal32.dll $<TARGET_FILE_DIR:main>
+            VERBATIM)
+endif()
