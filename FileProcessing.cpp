@@ -17,50 +17,48 @@ vector<string> FileProcessing::crimeTypes;
 vector<string> FileProcessing::crimeDates;
 vector<string> FileProcessing::crimeAreaNames;
 
+vector<CrimeData> FileProcessing::data;
+
 FileProcessing::FileProcessing() = default;
 
 void FileProcessing::ReadFile() {
     // Open CSV file
-    ifstream stream("Crime_Data_from_2020_to_Present.csv", ios_base::in);
+    ifstream stream("crime_stats_2024.csv", ios_base::in);
     string line;
 
     // Fail checks
     if (!stream) {
-        cerr << "Error opening file: Crime_Data_from_2020_to_Present.csv" << endl;
+        cerr << "Error opening file: crime_stats_2024.csv" << endl;
         return;
     }
 
     // Skip header
     getline(stream, line);
-    // cout << "Header: " << line << endl; // debug
-    int count = 0;
 
     // Read file line by line - 10 lines for debugging
-    // while (getline(stream, line)) {
-    while (count < 10 && getline(stream, line)) {
-        cout << line << endl; // debug
+    while (getline(stream, line)) {
         CrimeData crime;
+        std::stringstream lineStream(line);
 
-        // Extract report ID, date reported, time of occurrence without using them
-        string reportID, dateReported, timeOCC, area;
+        // Extract the date, time, area, latitude/longitude, and general category
 
-        getline(stream, reportID,',');
-        getline(stream, dateReported,',');
+        getline(lineStream, crime.date,',');
+        getline(lineStream, crime.time,',');
 
-        // Extract Date
-        getline(stream, crime.date,',');
+        getline(lineStream, crime.areaName,',');
+        getline(lineStream, crime.category,',');
 
-        getline(stream, timeOCC,',');
-        getline(stream, area,',');
+        string latitude, longitude;
+        getline(lineStream, latitude,',');
+        getline(lineStream, longitude,',');
 
-        // Extract Area Name
-        getline(stream, crime.areaName,',');
+        crime.latitude = stod(latitude);
+        crime.longitude = stod(longitude);
+
+        getline(lineStream, crime.generalCategory, ',');
 
         // Store data
-        crimeDates.push_back(crime.date);
-        crimeDates.push_back(crime.areaName);
-
-        count++;
+        data.push_back(crime);
     }
 }
 
@@ -96,7 +94,6 @@ vector<string> FileProcessing::getCrimeAreaName() {
     return crimeAreaNames;
 }
 
-vector<string> FileProcessing::getCrimeType() {
-    return crimeTypes;
+vector<CrimeData> FileProcessing::getData() {
+    return data;
 }
-
