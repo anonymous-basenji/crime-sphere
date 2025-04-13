@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include <ostream>
 
 #include "FileProcessing.h"
@@ -54,7 +55,7 @@ int main() {
                     // Todo: make this into a function
                     cout << "🚀 Ready to dive into the world of algorithms? Choose your path!" << endl;
                     cout << "1. K-D Tree Algorithm - Efficiently handle large datasets in multidimensional spaces!" << endl;
-                    cout << "2. Dijkstra's Algorithm - Find the shortest path like a pro!" << endl;
+                    cout << "2. Min Heap Algorithm - Find the shortest path like a pro!" << endl;
 
                     int algorithm;
                     if (cin >> algorithm) {
@@ -66,7 +67,7 @@ int main() {
                             // End Debug
                             break;
                         } else if (algorithm == 2) {
-                            // Todo: Call Dijkstra's algorithm
+                            // Todo: Call Min Heap algorithm
 
                             // Start Debug
                             cout <<  "You selected: " << algorithm << endl;
