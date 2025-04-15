@@ -21,6 +21,7 @@ struct CrimeData {
         output += "Area: " + areaName + "\n";
         output += "Date: " + date + "\n";
         output += "Time: " + time + "\n";
+        return output;
     }
 };
 
@@ -32,7 +33,7 @@ class FileProcessing {
     static vector<string> crimeDates;
     static vector<string> crimeAreaNames;
 
-    static vector<CrimeData> data;
+public: static vector<CrimeData> data;
 public:
     FileProcessing();
 
