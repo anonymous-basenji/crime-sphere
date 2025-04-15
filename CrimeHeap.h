@@ -33,12 +33,12 @@ typedef priority_queue<CrimeData, vector<pair<CrimeData, float>>, PairCompare> C
 class CrimeHeap {
     CustomPriorityQueue heap;
     int radius;
-    int latitude;
-    int longitude;
+    float latitude;
+    float longitude;
     public:
-        CrimeHeap(int radParam, int latParam, int longParam); // constructor initializes heap with data from FileProcessing.data
+        CrimeHeap(int radParam, float latParam, float longParam); // constructor initializes heap with data from FileProcessing.data
         vector<CrimeData> getCrimes(); // returns vector of all crimes, sorted in order
-        vector<CrimeData> getCrimesInRadius() const; // takes in coordinates for user's current location
+        vector<CrimeData> getCrimesInRadius(); // takes in coordinates for user's current location
         float calcDist(CrimeData crime) const; // return distance between a crime and current lat/long
 };
 
