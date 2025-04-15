@@ -33,7 +33,7 @@ class FileProcessing {
     static vector<string> crimeDates;
     static vector<string> crimeAreaNames;
 
-public: static vector<CrimeData> data;
+    static vector<CrimeData> data;
 public:
     FileProcessing();
 
