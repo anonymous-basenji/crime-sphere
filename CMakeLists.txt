@@ -14,6 +14,8 @@ add_executable(
         main.cpp
         FileProcessing.cpp
         Helpers.cpp
+        KDTwoTree.cpp
+        KDTwoTree.h
 )
 
 # Link against standard C++ library
