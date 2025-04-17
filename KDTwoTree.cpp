@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <iostream>
 #include <ostream>
+#include <cmath>
 
 KDTwoTree::KDTwoNode::KDTwoNode(CrimeData &crime) {
     this->crime = crime;
@@ -45,7 +46,7 @@ bool KDTwoTree::compareByLongitude(const CrimeData &first, const CrimeData &seco
     return first.longitude < second.longitude;
 }
 
-KDTwoTree::KDTwoNode * KDTwoTree::build(std::vector<CrimeData> &points, int level, int leftIndex, int rightIndex) {
+KDTwoTree::KDTwoNode * KDTwoTree::build(vector<CrimeData> &points, int level, int leftIndex, int rightIndex) {
     if (leftIndex > rightIndex) return nullptr;
 
     int axis = level % 2;
@@ -64,7 +65,6 @@ KDTwoTree::KDTwoNode * KDTwoTree::build(std::vector<CrimeData> &points, int leve
 
     node->left = build(points, level + 1, leftIndex, middleIndex - 1);
     node->right = build(points, level + 1, middleIndex + 1, rightIndex);
-
     return node;
 }
 
@@ -76,11 +76,47 @@ void KDTwoTree::clearTree(KDTwoNode *root) {
     delete root;
 }
 
-KDTwoTree::KDTwoTree(std::vector<CrimeData> &data) {
+KDTwoTree::KDTwoTree(vector<CrimeData> &data) {
     int rightIndex = static_cast<int>(data.size() - 1);
     root = build(data, 0, 0, rightIndex);
 }
 
+vector<pair<CrimeData, double>> KDTwoTree::findInRadius(double latitude, double longitude, double maxMiles) const {
+    vector<pair<CrimeData, double>> results;
+    CrimeData target;
+    target.latitude = latitude;
+    target.longitude = longitude;
+
+    findInRadiusHelper(root, target, 0, maxMiles, results);
+    return results;
+}
+
 KDTwoTree::~KDTwoTree() {
     clearTree(root);
+}
+
+void KDTwoTree::findInRadiusHelper(KDTwoNode *node, CrimeData &target, int level, double maxMiles,
+    vector<pair<CrimeData, double>> &results) const {
+    if (!node) return;
+
+    double distance = haversineDistance(target, node->crime);
+
+    if (distance < maxMiles) {
+        results.emplace_back(node->crime, distance);
+    }
+
+    int axis = level % 2;
+
+    double targetCoordinate = axis == 0 ? target.longitude : target.latitude;
+    double nodeCoordinate = axis == 0 ? node->crime.longitude : node->crime.latitude;
+
+    // https://www.usgs.gov/faqs/how-much-distance-does-a-degree-minute-and-second-cover-your-maps
+    double coordinateDiffInMiles = abs(nodeCoordinate - targetCoordinate) * (axis == 0 ? 54.6 : 69.17);
+
+    if (targetCoordinate < nodeCoordinate || coordinateDiffInMiles <= maxMiles) {
+        findInRadiusHelper(node->left, target, level + 1, maxMiles, results);
+    }
+    else if (targetCoordinate >= nodeCoordinate && coordinateDiffInMiles <= maxMiles) {
+        findInRadiusHelper(node->right, target, level + 1, maxMiles, results);
+    }
 }
