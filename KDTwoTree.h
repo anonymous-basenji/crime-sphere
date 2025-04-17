@@ -36,6 +36,7 @@ class KDTwoTree {
 public:
     KDTwoTree(vector<CrimeData>& data);
 
+    // Returns a pair with CrimeData and distance from input, sorted by closest crime to farthest
     vector<pair<CrimeData, double>> findInRadius(double latitude, double longitude, double maxMiles) const;
 
     ~KDTwoTree();

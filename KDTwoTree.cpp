@@ -88,6 +88,13 @@ vector<pair<CrimeData, double>> KDTwoTree::findInRadius(double latitude, double 
     target.longitude = longitude;
 
     findInRadiusHelper(root, target, 0, maxMiles, results);
+
+    auto sortByDistance = [](const pair<CrimeData, double>& one, const pair<CrimeData, double>& two) {
+        return one.second < two.second;
+    };
+
+    sort(results.begin(), results.end(), sortByDistance);
+
     return results;
 }
 
