@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.29)
 project(crime-sphere LANGUAGES CXX)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_LIBRARIES "${CMAKE_CXX_STANDARD_LIBRARIES} -lstdc++")
 
 # Use shared libraries on macOS to avoid linking issues
 if(APPLE)
@@ -24,9 +25,11 @@ add_executable(main
         FileProcessing.cpp
         Helpers.cpp
         Frame.cpp
-        Frame.h)
+        Frame.h
+        UI.cpp
+        UI.h)
 
-target_link_libraries(main PRIVATE sfml-graphics)
+target_link_libraries(main PRIVATE sfml-graphics sfml-window sfml-system)
 target_compile_features(main PRIVATE cxx_std_17)
 
 # On macOS, make sure to link against the C++ standard library

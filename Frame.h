@@ -1,19 +1,32 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "UI.h"
 
 using namespace sf;
 
+enum AppPage {
+    HOME,
+    SEARCH,
+    RESULTS
+};
+
+class Application;
+
 class Frame {
     RenderWindow& window;
-    Font fontRegular, fontBold;
+    UI ui;
+    AppPage currentPage;
 
-    /* ======= Draw Prompt ======= */
-    void drawHeader();
-    void drawMenu();
-
-    /* ======= Helpers ======= */
-    void centerText(Text& text, float yPosition) const;
+    /* ======= Draw Screens ======= */
+    void drawHomeScreen() const;
+    void drawSearchScreen() const;
+    void drawResultsScreen() const;
 public:
+    /* ======= Draw Window ======= */
     Frame(RenderWindow& window);
-    void drawFrame();
+    void drawFrame() const;
+
+    /* ======= Event Listeners ======= */
+    bool handleEvent(Event event);
+    void switchPage(AppPage page);
 };

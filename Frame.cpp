@@ -1,32 +1,36 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
+#include "Frame.h"
 
 using namespace std;
 using namespace sf;
 
-#include "Frame.h"
-#include "FileProcessing.h"
-
-Frame::Frame(RenderWindow& window) : window(window) {
-    // Load Fonts
-    if (!fontRegular.loadFromFile("font/OpenSans-Regular.ttf"))
-        cerr << "Failed to load font!" << endl;
-    if (!fontBold.loadFromFile("font/OpenSans-Bold.ttf"))
-        cerr << "Failed to load font!" << endl;
+Frame::Frame(RenderWindow& window)
+    : window(window), ui(window), currentPage(HOME) {
+    // Initialize with home screen size
+    window.setSize(Vector2u(1680, 600));
 }
 
-void Frame::drawFrame() {
+void Frame::drawFrame() const {
 
-    window.clear(Color(50, 50, 80));
+    // White background
+    window.clear(Color(250, 250, 250));
 
-    drawHeader();
-    drawMenu();
+    // Draw the top nav on all screens
+    ui.drawTopNav();
 
-    window.display();window.clear(Color(50, 50, 80));
-
-    drawHeader();
-    drawMenu();
+    // Draw the current screen
+    switch (currentPage) {
+    case HOME:
+        drawHomeScreen();
+        break;
+    case SEARCH:
+        drawSearchScreen();
+        break;
+    case RESULTS:
+        drawResultsScreen();
+        break;
+    }
 
     window.display();
 
@@ -211,68 +215,59 @@ void Frame::drawFrame() {
     // }
 }
 
-void Frame::drawHeader() {
-
-    Text title;
-    title.setFont(fontBold);
-    title.setString("Welcome to CrimeSphere!");
-    title.setCharacterSize(30);
-    title.setFillColor(Color::White);
-    centerText(title, 50);
-    window.draw(title);
-
-    Text subtitle;
-    subtitle.setFont(fontRegular);
-    subtitle.setString("Prepare to explore the world of crime data!");
-    subtitle.setCharacterSize(20);
-    subtitle.setFillColor(Color::White);
-    centerText(subtitle, 100);
-    window.draw(subtitle);
-
-    Text subtitleQ;
-    subtitleQ.setFont(fontRegular);
-    subtitleQ.setString("What would you like to do today?");
-    subtitleQ.setCharacterSize(18);
-    subtitleQ.setFillColor(Color::White);
-
-    const float leftMargin = 20.0f;
-    subtitleQ.setPosition(leftMargin, 180);
-    window.draw(subtitleQ);
+void Frame::drawHomeScreen() const {
+    ui.drawHero();
 }
 
-void Frame::drawMenu() {
-    // Get window size for centering
-    Vector2u windowSize = window.getSize();
-    const float leftMargin = 20.0f;
-
-    // Create menu options
-    Text option1Text;
-    option1Text.setFont(fontRegular);
-    option1Text.setString("1. Search by latitude and longitude");
-    option1Text.setCharacterSize(16);
-    option1Text.setFillColor(Color::White);
-    option1Text.setPosition(leftMargin, 210);
-
-    Text option2Text;
-    option2Text.setFont(fontRegular);
-    option2Text.setString("2. Search by crime type");
-    option2Text.setCharacterSize(16);
-    option2Text.setFillColor(Color::White);
-    option2Text.setPosition(leftMargin, 240);
-
-    // Draw menu options
-    window.draw(option1Text);
-    window.draw(option2Text);
+void Frame::drawSearchScreen() const {
+    // ui.drawHero();
 }
 
-/* ======= Helpers - To be moved to Helpers.cpp ======= */
-void Frame::centerText(Text& text, const float yPosition) const {
-    // Get window size for centering
-    const Vector2u windowSize = window.getSize();
-    const float windowWidth = static_cast<float>(windowSize.x);
+void Frame::drawResultsScreen() const {
+    // ui.drawHero();
+}
 
-    // Center the text dynamically
-    FloatRect titleBounds = text.getLocalBounds();
-    text.setOrigin(titleBounds.width / 2, 0);
-    text.setPosition(windowWidth / 2, yPosition);
+void Frame::switchPage(AppPage page) {
+    currentPage = page;
+}
+
+bool Frame::handleEvent(Event event) {
+    if (event.type == Event::MouseButtonPressed) {
+        Vector2i mousePos = Mouse::getPosition(window);
+
+        // Handle events based on current page
+        switch (currentPage) {
+        case HOME:
+            // Check if the START EXPLORING button was clicked
+            if (mousePos.x >= 80 && mousePos.x <= 280 &&
+                mousePos.y >= 195 && mousePos.y <= 245) {
+
+                    switchPage(SEARCH);
+                    return true;
+                }
+            break;
+
+        case SEARCH:
+            // Check if search button was clicked
+            if (mousePos.x >= 80 && mousePos.x <= 280 &&
+                mousePos.y >= 580 && mousePos.y <= 630) {
+
+                switchPage(RESULTS);
+                return true;
+                }
+            break;
+
+        case RESULTS:
+            // Check if back button was clicked
+            if (mousePos.x >= 80 && mousePos.x <= 280 &&
+                mousePos.y >= 600 && mousePos.y <= 650) {
+
+                switchPage(SEARCH);
+                return true;
+                }
+            break;
+        }
+    }
+
+    return false;
 }

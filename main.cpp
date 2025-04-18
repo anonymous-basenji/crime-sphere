@@ -11,7 +11,7 @@ using namespace sf;
 int main() {
 
     // Create main frame for app
-    RenderWindow window(VideoMode(1024, 768), "CrimeSphere - Crime Data Visualization");
+    RenderWindow window(VideoMode(1680, 600), "CrimeSphere - Crime Data Visualization");
     window.setFramerateLimit(60);
 
     // Create UI
@@ -22,8 +22,12 @@ int main() {
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed)
                 window.close();
+
+            // Handle events in our frame
+            frame.handleEvent(event);
         }
-        
+
+        // Draw current screen
         frame.drawFrame();
     }
 
