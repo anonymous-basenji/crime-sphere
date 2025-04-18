@@ -7,8 +7,10 @@ struct CrimeData {
     double longitude;
     double latitude;
     int radius;
-    string type;
+    string category;
+    string generalCategory;
     string date;
+    string time;
     string areaName;
 };
 
@@ -19,6 +21,8 @@ class FileProcessing {
     static vector<string> crimeTypes;
     static vector<string> crimeDates;
     static vector<string> crimeAreaNames;
+
+    static vector<CrimeData> data;
 public:
     FileProcessing();
 
@@ -33,4 +37,5 @@ public:
     static vector<string> getCrimeType();
     static vector<string> getCrimeDate();
     static vector<string> getCrimeAreaName();
+    static vector<CrimeData> getData();
 };
