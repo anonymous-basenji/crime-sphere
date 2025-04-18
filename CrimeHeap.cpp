@@ -5,6 +5,7 @@
 #include "CrimeHeap.h"
 
 #include <iostream>
+#include <limits>
 #include <math.h>
 using namespace std;
 
@@ -17,21 +18,20 @@ CrimeHeap::CrimeHeap(int radParam, double latParam, double longParam) {
         pair<CrimeData, double> crimePair;
         crimePair.first = crime;
         crimePair.second = calcDist(crime);
-        heap.push(crimePair);
+        insert(crimePair);
     }
 }
 
 vector<CrimeData> CrimeHeap::getCrimes() {
     vector<CrimeData> output;
-    CustomPriorityQueue tempHeap;
+    CrimeHeap tempHeap(radius, latitude, longitude);
     while (!heap.empty()) {
-        pair<CrimeData, double> crimePair = heap.top();
+        pair<CrimeData, double> crimePair = top();
         CrimeData crime = crimePair.first;
         output.push_back(crime);
-        tempHeap.push(crimePair);
-        heap.pop();
+        pop();
     }
-    heap = tempHeap; // replace heap with popped elements
+    heap = tempHeap.getVector(); // replace heap with popped elements
     return output;
 }
 
@@ -39,17 +39,17 @@ vector<pair<CrimeData, double>> CrimeHeap::getCrimesInRadius() {
     vector<pair<CrimeData, double>> output;
     vector<pair<CrimeData, double>> tempVector;
     while (!heap.empty()) {
-        pair<CrimeData, double> crimePair = heap.top();
+        pair<CrimeData, double> crimePair = top();
         if (crimePair.second <= radius) {
             CrimeData crime = crimePair.first;
             output.push_back(crimePair);
         }
         tempVector.push_back(crimePair);
-        heap.pop();
+        pop();
     }
 
     for (auto pair : tempVector) {
-        heap.push(pair);
+        insert(pair);
     } // bring popped elements back to the heap
     return output;
 }
@@ -84,5 +84,58 @@ double CrimeHeap::calcDist(CrimeData crime) const {
     double c = 2 * atan2(sqrt(a), sqrt(1-a));
 
     return R * c;
+}
+
+void CrimeHeap::insert(pair<CrimeData, double> crime) {
+    heap.push_back(crime);
+    heapifyUp(heap.size() - 1);
+}
+
+// inspired by structure in Canvas lecture slides
+void CrimeHeap::heapifyUp(int index) {
+    int parentIndex = (index - 1) / 2;
+    while (parentIndex >= 0 && heap[parentIndex].second > heap[index].second) {
+        swap(heap[parentIndex], heap[index]);
+        index = parentIndex;
+        parentIndex = (index - 1) / 2;
+    }
+}
+
+// inspired by structure in Canvas lecture slides
+void CrimeHeap::heapifyDown(int index) {
+    int leftChildIndex = (index * 2) + 1;
+    int rightChildIndex = (index * 2) + 2;
+    int smallestChildIndex = index;
+
+    if (leftChildIndex >= heap.size()) { // leaf case
+        return;
+    }
+    if (heap[leftChildIndex].second < heap[index].second) {
+        smallestChildIndex = leftChildIndex;
+        if (rightChildIndex < heap.size() && heap[rightChildIndex].second < heap[smallestChildIndex].second) {
+            smallestChildIndex = rightChildIndex;
+        }
+    }
+    if (smallestChildIndex == index) {
+        return;
+    }
+    swap(heap[index], heap[smallestChildIndex]);
+    heapifyDown(smallestChildIndex);
+}
+
+pair<CrimeData, double> CrimeHeap::top() const {
+    return heap[0];
+}
+
+vector<pair<CrimeData, double>> CrimeHeap::getVector() const {
+    return heap;
+}
+
+pair<CrimeData, double> CrimeHeap::pop() {
+    pair<CrimeData, double> returnVal = heap[0];
+    heap[0] = heap[heap.size() - 1];
+    heap.pop_back();
+    heapifyDown(0);
+    return returnVal;
 }
 
