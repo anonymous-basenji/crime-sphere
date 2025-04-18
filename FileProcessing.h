@@ -32,7 +32,6 @@ class FileProcessing {
     static vector<string> crimeTypes;
     static vector<string> crimeDates;
     static vector<string> crimeAreaNames;
-
     static vector<CrimeData> data;
 public:
     FileProcessing();
@@ -48,5 +47,5 @@ public:
     static vector<string> getCrimeType();
     static vector<string> getCrimeDate();
     static vector<string> getCrimeAreaName();
-    static vector<CrimeData> getData();
+    static vector<CrimeData> &getData();
 };

@@ -2,6 +2,7 @@
 #include <limits>
 #include <ostream>
 
+#include "CrimeHeap.h"
 #include "FileProcessing.h"
 #include "Helpers.h"
 
@@ -25,6 +26,8 @@ int main() {
 
     int searchOption;
     cin >> searchOption;
+
+    FileProcessing::ReadFile();
 
     switch (searchOption) {
         case 1:
@@ -68,7 +71,9 @@ int main() {
                             break;
                         } else if (algorithm == 2) {
                             // Todo: Call Min Heap algorithm
-
+                            CrimeHeap heap(radius, latitude, longitude);
+                            cout << endl;
+                            heap.printCrimesInRadius();
                             // Start Debug
                             cout <<  "You selected: " << algorithm << endl;
                             // End Debug

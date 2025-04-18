@@ -21,25 +21,26 @@ class PairCompare
 public:
     PairCompare(const bool& revparam=false)
     {reverse=revparam;}
-    bool operator() (const pair<CrimeData, float>& lhs, const pair<CrimeData, float>& rhs) const
+    bool operator() (const pair<CrimeData, double>& lhs, const pair<CrimeData, double>& rhs) const
     {
-        if (reverse) return (lhs.second > rhs.second);
-        else return (lhs.second < rhs.second);
+        if (reverse) return (lhs.second < rhs.second);
+        else return (lhs.second > rhs.second);
     }
 };
 
-typedef priority_queue<CrimeData, vector<pair<CrimeData, float>>, PairCompare> CustomPriorityQueue;
+typedef priority_queue<pair<CrimeData, double>, vector<pair<CrimeData, double>>, PairCompare> CustomPriorityQueue;
 // Heap is implemented as a priority queue, which is implemented as a vector
 class CrimeHeap {
     CustomPriorityQueue heap;
     int radius;
-    float latitude;
-    float longitude;
+    double latitude;
+    double longitude;
     public:
-        CrimeHeap(int radParam, float latParam, float longParam); // constructor initializes heap with data from FileProcessing.data
+        CrimeHeap(int radParam, double latParam, double longParam); // constructor initializes heap with data from FileProcessing.data
         vector<CrimeData> getCrimes(); // returns vector of all crimes, sorted in order
-        vector<CrimeData> getCrimesInRadius(); // takes in coordinates for user's current location
-        float calcDist(CrimeData crime) const; // return distance between a crime and current lat/long
+        vector<pair<CrimeData, double>> getCrimesInRadius(); // takes in coordinates for user's current location
+        void printCrimesInRadius();
+        double calcDist(CrimeData crime) const; // return distance between a crime and current lat/long
 };
 
 

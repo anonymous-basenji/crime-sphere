@@ -94,6 +94,6 @@ vector<string> FileProcessing::getCrimeAreaName() {
     return crimeAreaNames;
 }
 
-vector<CrimeData> FileProcessing::getData() {
+vector<CrimeData> &FileProcessing::getData() {
     return data;
 }
