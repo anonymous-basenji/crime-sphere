@@ -23,6 +23,11 @@ void Frame::drawFrame() {
     drawHeader();
     drawMenu();
 
+    window.display();window.clear(Color(50, 50, 80));
+
+    drawHeader();
+    drawMenu();
+
     window.display();
 
     // cout << "**************************************" << endl;
