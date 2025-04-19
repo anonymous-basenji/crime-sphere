@@ -3,6 +3,8 @@
 #include "FileProcessing.h"
 #include "UI.h"
 
+#include <unordered_map>
+
 using namespace std;
 using namespace sf;
 
@@ -458,4 +460,81 @@ void UI::drawPagination(int currentPage, int totalPages) const {
     // Next button
     if (currentPage < totalPages - 1)
         drawButton(windowWidth / 2 + 80.f, paginationY, 100.f, 40.f, "Next >");
+}
+
+string UI::summarizeCrimeResults(const vector<pair<CrimeData, double>>& results) const {
+    // 1. Total crimes found
+    string summaryString;
+    summaryString += "Total crimes found: " + to_string(results.size()) + "\n\n";
+
+    // Categories
+    unordered_map<string, int> categoryCounts;
+    unordered_map<string, int> dateCounts;
+    unordered_map<string, int> areaCounts;
+
+    for (const pair<CrimeData, double>& result : results) {
+        categoryCounts[result.first.generalCategory]++;
+        dateCounts[result.first.date]++;
+        areaCounts[result.first.areaName]++;
+    }
+
+    auto comparer = [](const pair<string, int>& a, const pair<string, int>& b) {
+        return a.second > b.second;
+    };
+
+    vector<pair<string, int>> sortedCategories(categoryCounts.begin(), categoryCounts.end());
+    sort(sortedCategories.begin(), sortedCategories.end(), comparer);
+
+    summaryString += "Crimes by General Category:\n";
+    for (int i = 0; i < sortedCategories.size(); ++i) {
+        summaryString += " - " + sortedCategories[i].first + ": " + to_string(sortedCategories[i].second) + "\n";
+    }
+    summaryString += "\n";
+
+    vector<pair<string, int>> sortedDates(dateCounts.begin(), dateCounts.end());
+    sort(sortedDates.begin(), sortedDates.end(), comparer);
+
+    summaryString += "Top 3 Crime Dates:\n";
+    for (int i = 0; i < sortedDates.size() && i < 3; ++i) {
+        summaryString += " - " + sortedDates[i].first + ": " + to_string(sortedDates[i].second) + " crimes\n";
+    }
+    summaryString += "\n";
+
+    // 4. Time of Day Breakdown
+    int morning = 0, afternoon = 0, evening = 0, night = 0;
+
+    for (const pair<CrimeData, double>& result : results) {
+        const string& time = result.first.time;
+        int hour = 0;
+
+        if (time.length() == 4) {
+            hour = stoi(time.substr(0, 2));
+        } else if (time.length() == 3) {
+            hour = stoi(time.substr(0, 1));
+        } else {
+            continue; // skip invalid times
+        }
+
+        if (hour < 6) night++;
+        else if (hour < 12) morning++;
+        else if (hour < 18) afternoon++;
+        else evening++;
+    }
+
+    summaryString += "Crimes by Time of Day:\n";
+    summaryString += " - Night (12am-6am): " + to_string(night) + "\n";
+    summaryString += " - Morning (6am-12pm): " + to_string(morning) + "\n";
+    summaryString += " - Afternoon (12pm-6pm): " + to_string(morning) + "\n";
+    summaryString += " - Evening (6pm-12am): " + to_string(evening) + "\n\n";
+
+    vector<pair<string, int>> sortedAreas(areaCounts.begin(), areaCounts.end());
+    sort(sortedAreas.begin(), sortedAreas.end(), comparer);
+
+    summaryString += "Top 3 Areas:\n";
+    for (int i = 0; i < sortedAreas.size() && i < 3; ++i) {
+        summaryString += " - " + sortedAreas[i].first += ": " + to_string(sortedAreas[i].second) + " crimes\n";
+    }
+
+    summaryString += "\n";
+    return summaryString;
 }

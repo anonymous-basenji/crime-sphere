@@ -21,6 +21,8 @@ public:
     Font fontRegular;
     Font fontBold;
 
+    string summarizeCrimeResults(const vector<pair<CrimeData, double>>& results) const;
+    
     /* ======= Draw Common Elements ======= */
     void drawTopNav() const;
     void drawHeroBar(const string& textString) const;
