@@ -5,7 +5,7 @@
 #ifndef KDTWOTREE_H
 #define KDTWOTREE_H
 
-#include "FileProcessing.h"
+#include "../FileProcessing.h"
 
 using namespace std;
 

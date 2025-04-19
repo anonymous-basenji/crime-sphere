@@ -1,8 +1,8 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Frame.h"
-#include "KDTwoTree.h"
-#include "CrimeHeap.h"
+#include "kdtree/KDTwoTree.h"
+#include "heap/CrimeHeap.h"
 
 using namespace std;
 using namespace sf;

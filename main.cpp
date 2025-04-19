@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#include "CrimeHeap.h"
+#include "heap/CrimeHeap.h"
 #include "FileProcessing.h"
 #include "Frame.h"
 #include "Helpers.h"
