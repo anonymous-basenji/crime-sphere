@@ -6,10 +6,12 @@ using namespace std;
 using namespace sf;
 
 Frame::Frame(RenderWindow& window)
-    : window(window), ui(window), currentPage(RESULTS), latitudeText(""),
+    : window(window), ui(window), currentPage(SEARCH), latitudeText(""),
     latitudeSelected(false), longitudeText(""), longitudeSelected(false), radiusText(""), radiusSelected(false) {
     // Initialize with home screen size
     window.setSize(Vector2u(1680, 600));
+
+    FileProcessing::ReadFile();
 }
 
 void Frame::drawFrame() const {
@@ -62,6 +64,12 @@ bool Frame::handleEvent(Event event) {
         // Print mouse position for debugging
         cout << "Mouse clicked at: " << mousePos.x << ", " << mousePos.y << endl;
 
+        // Deselect all text fields
+        latitudeSelected = false;
+        longitudeSelected = false;
+        radiusSelected = false;
+        algorithmSelected = false;
+
         // Handle events based on current page
         switch (currentPage) {
         case HOME:
@@ -89,6 +97,33 @@ bool Frame::handleEvent(Event event) {
                 switchPage(RESULTS);
                 return true;
             }
+            // Check latitude text field
+            if (mousePos.x >= 50 && mousePos.x <= 350 &&
+                mousePos.y >= 380 && mousePos.y <= 420) {
+                latitudeSelected = true;
+                return true;
+            }
+
+            // Check longitude text field
+            if (mousePos.x >= 420 && mousePos.x <= 720 &&
+                mousePos.y >= 380 && mousePos.y <= 420) {
+                longitudeSelected = true;
+                return true;
+            }
+
+            // Check radius text field
+            if (mousePos.x >= 780 && mousePos.x <= 1080 &&
+                mousePos.y >= 380 && mousePos.y <= 420) {
+                radiusSelected = true;
+                return true;
+            }
+
+            // Check algorithm text field
+            if (mousePos.x >= 1140 && mousePos.x <= 1440 &&
+                mousePos.y >= 380 && mousePos.y <= 420) {
+                algorithmSelected = true;
+                return true;
+            }
             break;
 
         case RESULTS:
@@ -100,6 +135,65 @@ bool Frame::handleEvent(Event event) {
                 return true;
             }
             break;
+        }
+    }
+    else if (event.type == Event::TextEntered) {
+        if (currentPage == SEARCH) {
+            // Only handle printable ASCII characters and backspace
+            if ((event.text.unicode >= 32 && event.text.unicode < 127) ||
+                event.text.unicode == 8) {
+
+                string* selectedText = nullptr;
+
+                // Determine which text field is selected
+                if (latitudeSelected)
+                    selectedText = &latitudeText;
+                else if (longitudeSelected)
+                    selectedText = &longitudeText;
+                else if (radiusSelected)
+                    selectedText = &radiusText;
+                else if (algorithmSelected)
+                    selectedText = &algorithmText;
+
+                // If a text field is selected, update its text
+                if (selectedText != nullptr) {
+                    // Backspace
+                    if (event.text.unicode == 8) {
+                        if (!selectedText->empty())
+                            selectedText->pop_back();
+                    }
+                    else
+                        *selectedText += static_cast<char>(event.text.unicode);
+                    return true;
+                }
+            }
+        }
+    }
+    else if (event.type == Event::KeyPressed) {
+        // Handle TAB key to switch between text fields
+        if (event.key.code == Keyboard::Tab && currentPage == SEARCH) {
+            if (latitudeSelected) {
+                latitudeSelected = false;
+                longitudeSelected = true;
+            }
+            else if (longitudeSelected) {
+                longitudeSelected = false;
+                radiusSelected = true;
+            }
+            else if (radiusSelected) {
+                radiusSelected = false;
+                algorithmSelected = true;
+            }
+            else if (algorithmSelected) {
+                algorithmSelected = false;
+                latitudeSelected = true;
+            }
+            else {
+                // If no field is selected, select the first one
+                latitudeSelected = true;
+            }
+
+            return true;
         }
     }
 

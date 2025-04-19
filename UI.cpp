@@ -13,43 +13,49 @@ UI::UI(RenderWindow& window) : window(window) {
     if (!fontBold.loadFromFile("font/Inter-Bold.ttf"))
         cerr << "Failed to load font!" << endl;
 
-    // Load hero image
+    // Load images
     if (!heroTexture.loadFromFile("images/hero-cropped.jpg"))
         cerr << "Failed to load hero image!" << endl;
+    if (!logo.loadFromFile("images/logo.png"))
+        cerr << "Failed to load log!" << endl;
 }
 
 void UI::drawTopNav() const {
 
     // Create navigation bar
-    RectangleShape navBar(Vector2f(window.getSize().x, 50.f));
+    RectangleShape navBar(Vector2f(window.getSize().x, 90.f));
     navBar.setFillColor(Color(250, 250, 250));
     window.draw(navBar);
 
-    // Create the logo
-    Text logo;
-    logo.setFont(fontBold);
-    logo.setString("CrimeSphere");
-    logo.setCharacterSize(30);
-    logo.setFillColor(Color(44, 62, 80));;
-    logo.setPosition(40.f, 8.f); // Positioned on the left side of the navigation bar
-    window.draw(logo);
+    // Create a sprite using the logo texture
+    Sprite logoSprite;
+    logoSprite.setTexture(logo);
+    const float originalWidth = logoSprite.getLocalBounds().width;
+    const float targetWidth = 120.f;
+    const float scaleFactor = targetWidth / originalWidth;
+    logoSprite.setScale(scaleFactor, scaleFactor);
+
+    // Position below the nav bar
+    logoSprite.setPosition(50.f, 5.f);
+
+    window.draw(logoSprite);
 
     // Create the first link
     Text link1;
     link1.setFont(fontRegular);
     link1.setString("Video");
-    link1.setCharacterSize(20);
+    link1.setCharacterSize(18);
     link1.setFillColor(Color(44, 62, 80));
-    link1.setPosition(window.getSize().x - 270.f, 12.f); // Right-aligned
+    link1.setPosition(window.getSize().x - 270.f, 35.f); // Right-aligned
     window.draw(link1);
 
     // Create the second link
     Text link2;
     link2.setFont(fontRegular);
     link2.setString("Documentation");
-    link2.setCharacterSize(20);
+    link2.setCharacterSize(18);
     link2.setFillColor(Color(44, 62, 80));
-    link2.setPosition(window.getSize().x - 180.f, 12.f); // Right-aligned
+    link2.setPosition(window.getSize().x - 180.f, 35.f); // Right-aligned
     window.draw(link2);
 }
 
@@ -57,7 +63,7 @@ void UI::drawHeroBar(const string& textString) const {
     float windowWidth = static_cast<float>(window.getSize().x);
     RectangleShape titleBar(Vector2f(windowWidth, 150));
     titleBar.setFillColor(Color(52, 152, 219));
-    titleBar.setPosition(0, 80);
+    titleBar.setPosition(0, 90);
 
     window.draw(titleBar);
 
@@ -67,7 +73,7 @@ void UI::drawHeroBar(const string& textString) const {
     subtitle.setString(textString);
     subtitle.setCharacterSize(30);
     subtitle.setFillColor(Color::White);
-    subtitle.setPosition(50, 130);
+    subtitle.setPosition(50, 145);
     window.draw(subtitle);
 }
 
@@ -84,11 +90,11 @@ void UI::drawHero() const {
     heroSprite.setScale(scale, scale);
 
     // Position below the nav bar
-    heroSprite.setPosition(0, 50);
+    heroSprite.setPosition(0, 90);
 
     // Add a semi-transparent overlay for better text readability
     RectangleShape overlay(Vector2f(windowWidth, heroTexture.getSize().y * scale));
-    overlay.setPosition(0, 50);
+    overlay.setPosition(0, 90);
     // Precisely 30% opacity
     overlay.setFillColor(Color(0, 0, 0, static_cast<Uint8>(0.3f * 255)));
 
@@ -103,7 +109,7 @@ void UI::drawHero() const {
 
     // Calculate the hero image's scaled height
     float heroHeight = heroTexture.getSize().y * scale;
-    float boxPosY = 50 + (heroHeight - boxHeight) / 2;
+    float boxPosY = 90 + (heroHeight - boxHeight) / 2;
 
     RectangleShape textBox(Vector2f(boxWidth, boxHeight));
     // White with slight transparency
@@ -138,16 +144,6 @@ void UI::drawHeader(const float boxMargin, const float boxPosY) const {
 
     drawButton(boxMargin + textPadding, boxPosY + textPadding + 115, 200, 50,
         "START EXPLORING");
-
-    // Text subtitleQ;
-    // subtitleQ.setFont(fontRegular);
-    // subtitleQ.setString("What would you like to do today?");
-    // subtitleQ.setCharacterSize(18);
-    // subtitleQ.setFillColor(Color::White);
-    //
-    // const float leftMargin = 20.0f;
-    // subtitleQ.setPosition(leftMargin, 180);
-    // window.draw(subtitleQ);
 }
 
 void UI::drawMainSection(const string& latitudeText, const bool& latitudeSelected, const string& longitudeText,
@@ -173,11 +169,11 @@ void UI::drawMainSection(const string& latitudeText, const bool& latitudeSelecte
     mainSectionText.setPosition(textPadding, 300);
     window.draw(mainSectionText);
 
-    drawMenu(latitudeText, latitudeSelected, longitudeText, longitudeSelected, radiusText, radiusSelected,
+    drawForm(latitudeText, latitudeSelected, longitudeText, longitudeSelected, radiusText, radiusSelected,
         algorithmText, algorithmSelected);
 }
 
-void UI::drawMenu(const string& latitudeText, const bool& latitudeSelected, const string& longitudeText,
+void UI::drawForm(const string& latitudeText, const bool& latitudeSelected, const string& longitudeText,
     const bool& longitudeSelected, const string& radiusText, const bool& radiusSelected,
     const string& algorithmText, const bool& algorithmSelected) const {
     const float textPadding = 50;

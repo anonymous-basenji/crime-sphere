@@ -31,13 +31,5 @@ int main() {
         frame.drawFrame();
     }
 
-    // Todo: Read and Process file to return info based on user selection
-    // FileProcessing::ReadFile();
-
-    /* ========= Print data for debugging ========= */
-    Helpers helpers;
-    // Helpers::PrintDate(fileProcessing);
-    // helpers.PrintAreaName(fileProcessing);
-
     return 0;
 }
