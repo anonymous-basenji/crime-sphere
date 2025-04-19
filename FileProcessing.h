@@ -1,12 +1,12 @@
 #pragma once
 #include <vector>
+#include <string>
 
 using namespace std;
 
 struct CrimeData {
     double longitude;
     double latitude;
-    int radius;
     string category;
     string generalCategory;
     string date;
@@ -40,5 +40,5 @@ public:
     static vector<string> getCrimeDate();
     static vector<string> getCrimeAreaName();
     static vector<string> getCrimeAlgorithm();
-    static vector<CrimeData> getData();
+    static vector<CrimeData> &getData();
 };

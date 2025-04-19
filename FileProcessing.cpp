@@ -111,7 +111,7 @@ vector<string> FileProcessing::getCrimeAlgorithm() {
     return crimeAlgorithm;
 }
 
-vector<CrimeData> FileProcessing::getData() {
+vector<CrimeData> &FileProcessing::getData() {
     return data;
 }
 
