@@ -6,9 +6,9 @@ using namespace std;
 using namespace sf;
 
 Frame::Frame(RenderWindow& window)
-    : window(window), ui(window), currentPage(RESULTS), latitudeText(""),
+    : window(window), ui(window), currentPage(SEARCH), latitudeText(""),
     latitudeSelected(false), longitudeText(""), longitudeSelected(false), radiusText(""), radiusSelected(false),
-    algorithmText(""), algorithmSelected(false) {
+    algorithmText(""), algorithmSelected(false), resultsPage(0), resultsPerPage(10) {
 
     // Initialize with home screen size
     window.setSize(Vector2u(1680, 600));
@@ -52,7 +52,7 @@ void Frame::drawSearchScreen() const {
 
 void Frame::drawResultsScreen() const {
     ui.drawHeroBar("RESULTS");
-    ui.drawResults(results);
+    ui.drawResults(results, resultsPage, resultsPerPage, getTotalPages());
 }
 
 void Frame::switchPage(AppPage page) {
@@ -61,12 +61,13 @@ void Frame::switchPage(AppPage page) {
 
     // Adjust window size based on the page
     if (page == RESULTS) {
-        window.setSize(Vector2u(window.getSize().x, 800));
+        resultsPage = 0;
+        window.setSize(Vector2u(window.getSize().x, 900));
 
         // Create a new view with the same width but taller height
         View view = window.getView();
-        view.setSize(view.getSize().x, 800);
-        view.setCenter(view.getCenter().x, 400);
+        view.setSize(view.getSize().x, 900);
+        view.setCenter(view.getCenter().x, 450);
         window.setView(view);
 
         // Adjust window position to keep it centered
@@ -167,6 +168,31 @@ bool Frame::handleEvent(Event event) {
                 mousePos.y >= 56 && mousePos.y <= 282) {
 
                 switchPage(SEARCH);
+                return true;
+            }
+
+            // Add pagination button handling
+            const float windowWidth = static_cast<float>(window.getSize().x),
+            paginationY = 800.f;
+
+            // Previous button
+            if (resultsPage > 0 &&
+                mousePos.x >= windowWidth / 2 - 250.f && mousePos.x <= windowWidth / 2 - 130.f &&
+                mousePos.y >= paginationY && mousePos.y <= paginationY + 40.f) {
+
+                resultsPage--;
+                return true;
+            }
+
+            // Next button
+            if (resultsPage < getTotalPages() - 1 &&
+                mousePos.x >= windowWidth / 2 + 80.f && mousePos.x <= windowWidth / 2 + 180.f &&
+                mousePos.y >= paginationY && mousePos.y <= paginationY + 40.f) {
+
+                resultsPage++;
+
+                drawFrame();
+                
                 return true;
             }
             break;
@@ -287,4 +313,20 @@ void Frame::saveUserInput() {
     } catch (const exception& e) {
         cerr << "Error saving user input: " << e.what() << endl;
     }
+}
+
+/* ========= Table Paging ========= */
+void Frame::nextPage() {
+    if ((resultsPage + 1) * resultsPerPage < results.size())
+        resultsPage++;
+}
+
+void Frame::prevPage() {
+    if (resultsPage > 0)
+        resultsPage--;
+}
+
+int Frame::getTotalPages() const {
+    if (results.empty()) return 0;
+    return (results.size() + resultsPerPage - 1) / resultsPerPage;
 }

@@ -43,4 +43,9 @@ public:
 
     /* ======= Data Management ======= */
     void saveUserInput();
+
+    /* ========= Table Paging ========= */
+    void nextPage();
+    void prevPage();
+    int getTotalPages() const;
 };

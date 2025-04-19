@@ -176,6 +176,7 @@ void UI::drawMainSection(const string& latitudeText, const bool& latitudeSelecte
 void UI::drawForm(const string& latitudeText, const bool& latitudeSelected, const string& longitudeText,
     const bool& longitudeSelected, const string& radiusText, const bool& radiusSelected,
     const string& algorithmText, const bool& algorithmSelected) const {
+
     const float textPadding = 50;
 
     // Create menu options
@@ -224,13 +225,13 @@ void UI::drawForm(const string& latitudeText, const bool& latitudeSelected, cons
 
     window.draw(algorithmLabel);
 
-    drawTextField(1140, 380, 300, 40, "e.g., KD Tree",
-        algorithmText, algorithmSelected);
+    drawTextField(1140, 380, 300, 40, "Type K-D Tree or Heap",
+    algorithmText, algorithmSelected);
 
     drawButton(textPadding, 460, 200, 50, "SEARCH");
 }
 
-void UI::drawResults(const vector<CrimeData>& results) const {
+void UI::drawResults(const vector<CrimeData>& results, int currentPage, int itemsPerPage, int totalPages) const {
     const float textPadding = 50;
 
     // Add back button
@@ -242,7 +243,10 @@ void UI::drawResults(const vector<CrimeData>& results) const {
     back.setPosition(textPadding, 260);
     window.draw(back);
 
-    drawResultsTable(results);
+    drawResultsTable(results, currentPage, itemsPerPage);
+
+    if (!results.empty() && totalPages > 1)
+        drawPagination(currentPage, totalPages);
 }
 
 void UI::drawTextField(float x, float y, float width, float height, const string& placeholder,
@@ -334,28 +338,32 @@ void UI::centerText(Text& text, const float yPosition) const {
     text.setPosition(windowWidth / 2, yPosition);
 }
 
-void UI::drawResultsTable(const vector<CrimeData>& results) const {
+void UI::drawResultsTable(const vector<CrimeData>& results, int currentPage, int itemsPerPage) const {
 
     // Constants for table layout
     const float tableX = 50.f;
     const float tableY = 330.f;
     const float rowHeight = 40.f;
-    const float colWidth[] = {150.f, 120.f, 150.f, 300.f, 250.f};
+    const float colWidth[] = {150.f, 120.f, 150.f, 400.f, 250.f};
     const int numCols = 5;
 
-    const int maxRows = 10;
-    const int rowCount = min(maxRows, static_cast<int>(results.size()));
+    // Calculate start and end indices for current page
+    int startIdx = currentPage * itemsPerPage;
+    int endIdx = min(startIdx + itemsPerPage, static_cast<int>(results.size()));
+    const int maxRows = 20;
+    const int rowCount = endIdx - startIdx;
 
-    // Results count
+    // Show results
     Text resultCount;
     resultCount.setFont(fontRegular);
 
-    // Add this condition to show different text for fake data
-    if (results.empty()) {
-        resultCount.setString("Showing 5 sample records (no search results found)");
-    } else {
+    if (results.empty())
+        resultCount.setString("No search results found");
+    else {
+        int totalPages = (results.size() + itemsPerPage - 1) / itemsPerPage;
         resultCount.setString("Found " + to_string(results.size()) + " results" +
-                          (results.size() > maxRows ? " (showing first " + to_string(maxRows) + ")" : ""));
+                  " (showing page " + to_string(currentPage + 1) + " of " +
+                  to_string(totalPages) + ")");
     }
 
     resultCount.setCharacterSize(14);
@@ -366,7 +374,6 @@ void UI::drawResultsTable(const vector<CrimeData>& results) const {
     // Table headers
     const string headers[] = {"Date", "Time", "Area", "Crime Type", "Location"};
 
-    // Draw table headers
     for (int col = 0; col < numCols; col++) {
         float x = tableX;
         for (int i = 0; i < col; i++) {
@@ -392,7 +399,7 @@ void UI::drawResultsTable(const vector<CrimeData>& results) const {
     // Draw table rows
     for (int row = 0; row < rowCount; row++) {
         // const CrimeData& data = results[row];
-        const CrimeData& data = results[row];
+        const CrimeData& data = results[startIdx + row];
         float y = tableY + (row + 1) * rowHeight;
 
         // Row background (alternating colors for readability)
@@ -424,4 +431,31 @@ void UI::drawResultsTable(const vector<CrimeData>& results) const {
             x += colWidth[col];
         }
     }
+}
+
+void UI::drawPagination(int currentPage, int totalPages) const {
+    // Position the pagination controls at the bottom of the table
+    float windowWidth = static_cast<float>(window.getSize().x);
+    float paginationY = 800.f;
+
+    // Previous button
+    if (currentPage > 0)
+        drawButton(windowWidth / 2 - 250.f, paginationY, 120.f, 40.f, "< Previous");
+
+    // Page indicator
+    Text pageText;
+    pageText.setFont(fontRegular);
+    pageText.setString("Page " + to_string(currentPage + 1) + " of " + to_string(totalPages));
+    pageText.setCharacterSize(15);
+    pageText.setFillColor(Color(44, 62, 80));
+
+    // Center the text
+    FloatRect textBounds = pageText.getLocalBounds();
+    pageText.setOrigin(textBounds.width / 2, 0);
+    pageText.setPosition(windowWidth / 2 - 20.f, paginationY + 10.f);
+    window.draw(pageText);
+
+    // Next button
+    if (currentPage < totalPages - 1)
+        drawButton(windowWidth / 2 + 80.f, paginationY, 100.f, 40.f, "Next >");
 }

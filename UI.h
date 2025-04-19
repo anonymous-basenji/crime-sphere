@@ -31,8 +31,8 @@ public:
 
     /* ======= Draw Search Elements ======= */
     void drawForm(const string& latitudeText, const bool& latitudeSelected, const string& longitudeText,
-        const bool& longitudeSelected, const string& radiusText, const bool& radiusSelected,
-        const string& algorithmText, const bool& algorithmSelected) const;
+        const bool& longitudeSelected, const string& radiusText, const bool& radiusSelected, const string& algorithmText,
+        const bool& algorithmSelected) const;
     void drawMainSection(const string& latitudeText, const bool& latitudeSelected, const string& longitudeText,
     const bool& longitudeSelected, const string& radiusText, const bool& radiusSelected, const string& algorithmText,
     const bool& algorithmSelected) const;
@@ -40,6 +40,7 @@ public:
         const string& placeholder, const string& textValue, const bool& selected) const;
 
     /* ======= Draw Results Elements ======= */
-    void drawResults(const vector<CrimeData>& results) const;
-    void drawResultsTable(const vector<CrimeData>& results) const;
+    void drawResults(const vector<CrimeData>& results, int currentPage, int itemsPerPage, int totalPages) const;
+    void drawResultsTable(const vector<CrimeData>& results, int currentPage, int itemsPerPage) const;
+    void drawPagination(int currentPage, int totalPages) const;
 };
