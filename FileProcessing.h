@@ -13,6 +13,17 @@ struct CrimeData {
     string time;
     string areaName;
     string algorithm;
+
+    string getString() {
+        string output;
+        output += "Latitude: " + to_string(latitude) + "\n";
+        output += "Longitude: " + to_string(longitude) + "\n";
+        output += "Category: " + generalCategory + "\n";
+        output += "Area: " + areaName + "\n";
+        output += "Date: " + date + "\n";
+        output += "Time: " + time + "\n";
+        return output;
+    }
 };
 
 class FileProcessing {
