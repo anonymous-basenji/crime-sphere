@@ -263,51 +263,66 @@ bool Frame::handleEvent(Event event) {
     return false;
 }
 // Add this method to your Frame class implementation (Frame.cpp)
-
 void Frame::saveUserInput() {
-    CrimeData userInput;
+    double latitude;
+    double longitude;
+    double radius;
+    string algorithm;
 
     try {
         // Convert string input to appropriate types
         if (!latitudeText.empty())
-            userInput.latitude = stod(latitudeText);
+            latitude = stod(latitudeText);
         else
-            userInput.latitude = 0.0;
+            latitude = 0.0;
 
         if (!longitudeText.empty())
-            userInput.longitude = stod(longitudeText);
+            longitude = stod(longitudeText);
         else
-            userInput.longitude = 0.0;
+            longitude = 0.0;
 
         if (!radiusText.empty()) {
-            userInput.radius = stoi(radiusText);
+            radius = stoi(radiusText);
             // Ensure radius is within valid range
-            if (userInput.radius < 1) userInput.radius = 1;
-            if (userInput.radius > 10) userInput.radius = 10;
+            if (radius < 1) radius = 1;
+            if (radius > 10) radius = 10;
         }
 
         if (!algorithmText.empty()) {
             // Call what algorithm to use
-            if (userInput.algorithm == "K-D Tree") {
-                // KDTwoTree kdTree(userInput.radius, userInput.latitude, userInput.longitude);
+            if (algorithmText == "1") {
+                algorithm = "1";
             }
-            else if (userInput.algorithm == "Heap")
-                CrimeHeap heap(userInput.radius, userInput.latitude, userInput.longitude);
+            else if (algorithmText == "2") {
+                algorithm = "2";
+            }
+            else {
+                algorithm = "0";
+            }
         }
 
-        // Add the new entry to the data vector
-        FileProcessing::addCrimeData(userInput);
-
         // Also add the search parameters for filtering
-        FileProcessing::addSearchParameters(userInput.latitude, userInput.longitude, userInput.radius, userInput.algorithm);
+        FileProcessing::addSearchParameters(latitude, longitude, radius, algorithm);
 
         // Print confirmation message
         cout << "User input saved to data vector." << endl;
-        cout << "Latitude: " << userInput.latitude << ", Longitude: " << userInput.longitude
-             << ", Radius: " << userInput.radius << ", Algorithm: " << userInput.algorithm << endl;
+        cout << "Latitude: " << latitude << ", Longitude: " << longitude
+             << ", Radius: " << radius << ", Algorithm: " << algorithm << endl;
 
         // Update the results to include the user's entry
-        results = FileProcessing::getData();
+        //results = FileProcessing::getData();
+
+        if (algorithm == "1") {
+            KDTwoTree kdTree(FileProcessing::getData());
+            results = kdTree.findInRadius(latitude, longitude, radius);
+        }
+        else if (algorithm == "2") {
+            CrimeHeap heap(radius, latitude, longitude);
+            results = heap.getCrimesInRadius();
+        }
+        else {
+            results = {};
+        }
 
     } catch (const exception& e) {
         cerr << "Error saving user input: " << e.what() << endl;

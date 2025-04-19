@@ -24,7 +24,7 @@ class Frame {
     bool radiusSelected;
     bool algorithmSelected;
 
-    vector<CrimeData> results;
+    vector<pair<CrimeData, double>> results;
     int resultsPage;
     int resultsPerPage;
 

@@ -13,7 +13,6 @@ struct CrimeData {
     string date;
     string time;
     string areaName;
-    string algorithm;
 
     string getString() {
         string output;
@@ -42,7 +41,6 @@ public:
 
     static void ReadFile();
     static void addSearchParameters(const double latitude, const double longitude, const int radius, const string& algorithm);
-    static void addCrimeData(const CrimeData& crimeData);
 
     /* ========= Getters ========= */
     static vector<double> getCrimeLongitude();

@@ -231,7 +231,7 @@ void UI::drawForm(const string& latitudeText, const bool& latitudeSelected, cons
     drawButton(textPadding, 460, 200, 50, "SEARCH");
 }
 
-void UI::drawResults(const vector<CrimeData>& results, int currentPage, int itemsPerPage, int totalPages) const {
+void UI::drawResults(const vector<pair<CrimeData, double>>& results, int currentPage, int itemsPerPage, int totalPages) const {
     const float textPadding = 50;
 
     // Add back button
@@ -338,7 +338,7 @@ void UI::centerText(Text& text, const float yPosition) const {
     text.setPosition(windowWidth / 2, yPosition);
 }
 
-void UI::drawResultsTable(const vector<CrimeData>& results, int currentPage, int itemsPerPage) const {
+void UI::drawResultsTable(const vector<pair<CrimeData, double>>& results, int currentPage, int itemsPerPage) const {
 
     // Constants for table layout
     const float tableX = 50.f;
@@ -399,7 +399,7 @@ void UI::drawResultsTable(const vector<CrimeData>& results, int currentPage, int
     // Draw table rows
     for (int row = 0; row < rowCount; row++) {
         // const CrimeData& data = results[row];
-        const CrimeData& data = results[startIdx + row];
+        const CrimeData& data = results[startIdx + row].first;
         float y = tableY + (row + 1) * rowHeight;
 
         // Row background (alternating colors for readability)

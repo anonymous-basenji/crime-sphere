@@ -40,7 +40,7 @@ public:
         const string& placeholder, const string& textValue, const bool& selected) const;
 
     /* ======= Draw Results Elements ======= */
-    void drawResults(const vector<CrimeData>& results, int currentPage, int itemsPerPage, int totalPages) const;
-    void drawResultsTable(const vector<CrimeData>& results, int currentPage, int itemsPerPage) const;
+    void drawResults(const vector<pair<CrimeData, double>>& results, int currentPage, int itemsPerPage, int totalPages) const;
+    void drawResultsTable(const vector<pair<CrimeData, double>>& results, int currentPage, int itemsPerPage) const;
     void drawPagination(int currentPage, int totalPages) const;
 };

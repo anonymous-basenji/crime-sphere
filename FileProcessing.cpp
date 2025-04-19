@@ -71,17 +71,6 @@ void FileProcessing::addSearchParameters(const double latitude, const double lon
     crimeAlgorithm.push_back(algorithm);
 }
 
-void FileProcessing::addCrimeData(const CrimeData& crimeData) {
-    data.push_back(crimeData);
-
-    crimeLatitudes.push_back(crimeData.latitude);
-    crimeLongitudes.push_back(crimeData.longitude);
-
-    if (crimeData.radius > 0) {
-        crimeRadii.push_back(crimeData.radius);
-    }
-}
-
 /* ========= Getters ========= */
 vector<double> FileProcessing::getCrimeLongitude() {
     return crimeLongitudes;

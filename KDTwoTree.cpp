@@ -86,7 +86,7 @@ KDTwoTree::KDTwoTree(vector<CrimeData> &data) {
     root = build(data, 0, 0, rightIndex);
 }
 
-vector<pair<CrimeData, double>> KDTwoTree::findInRadius(double latitude, double longitude, double maxMiles) const {
+vector<pair<CrimeData, double>> KDTwoTree::findInRadius(double latitude, double longitude, double maxMiles) {
     vector<pair<CrimeData, double>> results;
     CrimeData target;
     target.latitude = latitude;
