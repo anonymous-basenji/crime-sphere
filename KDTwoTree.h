@@ -24,6 +24,7 @@ class KDTwoTree {
 
     static bool compareByLatitude(const CrimeData& first, const CrimeData& second);
     static bool compareByLongitude(const CrimeData& first, const CrimeData& second);
+    static double degreesToRadians(double num);
 
     KDTwoNode* root;
 

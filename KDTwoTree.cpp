@@ -20,12 +20,11 @@ KDTwoTree::KDTwoNode::KDTwoNode(CrimeData &crime) {
 // https://en.wikipedia.org/wiki/Great-circle_distance
 double KDTwoTree::haversineDistance(const KDTwoNode &first, const KDTwoNode &second)  {
     const double R = 3958.8; // Average Earth radius in miles
-    const double DEG_TO_RAD = M_PI / 180.0;
 
-    double latitudeTwo = second.crime.latitude * DEG_TO_RAD;
-    double latitudeOne = first.crime.latitude * DEG_TO_RAD;
-    double longitudeTwo = second.crime.longitude * DEG_TO_RAD;
-    double longitudeOne = first.crime.longitude * DEG_TO_RAD;
+    double latitudeTwo = degreesToRadians(second.crime.latitude);
+    double latitudeOne = degreesToRadians(first.crime.latitude);
+    double longitudeTwo = degreesToRadians(second.crime.longitude);
+    double longitudeOne = degreesToRadians(first.crime.longitude);
 
     double dLat = latitudeTwo - latitudeOne;
     double dLon = longitudeTwo - longitudeOne;
@@ -44,6 +43,12 @@ bool KDTwoTree::compareByLatitude(const CrimeData &first, const CrimeData &secon
 
 bool KDTwoTree::compareByLongitude(const CrimeData &first, const CrimeData &second) {
     return first.longitude < second.longitude;
+}
+
+double KDTwoTree::degreesToRadians(double num) {
+    const double DEG_TO_RAD = M_PI / 180.0;
+
+    return num * DEG_TO_RAD;
 }
 
 KDTwoTree::KDTwoNode * KDTwoTree::build(vector<CrimeData> &points, int level, int leftIndex, int rightIndex) {
@@ -117,13 +122,23 @@ void KDTwoTree::findInRadiusHelper(KDTwoNode *node, CrimeData &target, int level
     double targetCoordinate = axis == 0 ? target.longitude : target.latitude;
     double nodeCoordinate = axis == 0 ? node->crime.longitude : node->crime.latitude;
 
-    // https://www.usgs.gov/faqs/how-much-distance-does-a-degree-minute-and-second-cover-your-maps
-    double coordinateDiffInMiles = abs(nodeCoordinate - targetCoordinate) * (axis == 0 ? 54.6 : 69.17);
+    double coordinateDiffDegrees = std::abs(targetCoordinate - nodeCoordinate);
+    double coordinateDiffInMiles;
+
+    if (axis == 0) {
+        // Longitude cosine correction
+        double latitudeInRadius = degreesToRadians(target.latitude);
+        coordinateDiffInMiles = coordinateDiffDegrees * (69.172 * cos(latitudeInRadius));
+    }
+    else {
+        coordinateDiffInMiles = coordinateDiffDegrees * 69.172;
+    }
 
     if (targetCoordinate < nodeCoordinate || coordinateDiffInMiles <= maxMiles) {
         findInRadiusHelper(node->left, target, level + 1, maxMiles, results);
     }
-    else if (targetCoordinate >= nodeCoordinate && coordinateDiffInMiles <= maxMiles) {
+
+    if (targetCoordinate >= nodeCoordinate || coordinateDiffInMiles <= maxMiles) {
         findInRadiusHelper(node->right, target, level + 1, maxMiles, results);
     }
 }
