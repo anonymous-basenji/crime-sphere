@@ -10,12 +10,23 @@ enum AppPage {
     RESULTS
 };
 
-class Application;
-
 class Frame {
     RenderWindow& window;
     UI ui;
     AppPage currentPage;
+
+    string latitudeText;
+    string longitudeText;
+    string radiusText;
+    string algorithmText;
+    bool latitudeSelected;
+    bool longitudeSelected;
+    bool radiusSelected;
+    bool algorithmSelected;
+
+    vector<CrimeData> results;
+    int resultsPage;
+    int resultsPerPage;
 
     /* ======= Draw Screens ======= */
     void drawHomeScreen() const;

@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "FileProcessing.h"
 
 using namespace sf;
 using namespace std;
@@ -21,12 +22,23 @@ public:
 
     /* ======= Draw Common Elements ======= */
     void drawTopNav() const;
+    void drawHeroBar(const string& textString) const;
 
     /* ======= Draw Home Elements ======= */
     void drawHero() const;
     void drawHeader(float boxMargin, float boxPosY) const;
 
     /* ======= Draw Search Elements ======= */
-    void drawMainSection() const;
-    void drawMenu() const;
+    void drawMenu(const string& latitudeText, const bool& latitudeSelected, const string& longitudeText,
+        const bool& longitudeSelected, const string& radiusText, const bool& radiusSelected,
+        const string& algorithmText, const bool& algorithmSelected) const;
+    void drawMainSection(const string& latitudeText, const bool& latitudeSelected, const string& longitudeText,
+    const bool& longitudeSelected, const string& radiusText, const bool& radiusSelected, const string& algorithmText,
+    const bool& algorithmSelected) const;
+    void drawTextField(float x, float y, float width, float height,
+        const string& placeholder, const string& textValue, const bool& selected) const;
+
+    /* ======= Draw Results Elements ======= */
+    void drawResults(const vector<CrimeData>& results) const;
+    void drawResultsTable(const vector<CrimeData>& results) const;
 };
