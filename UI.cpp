@@ -227,7 +227,7 @@ void UI::drawForm(const string& latitudeText, const bool& latitudeSelected, cons
 
     window.draw(algorithmLabel);
 
-    drawTextField(1140, 380, 300, 40, "Type K-D Tree or Heap",
+    drawTextField(1140, 380, 300, 40, "Type 1 for K-D Tree or 2 for Heap",
     algorithmText, algorithmSelected);
 
     drawButton(textPadding, 460, 200, 50, "SEARCH");
@@ -346,7 +346,7 @@ void UI::drawResultsTable(const vector<pair<CrimeData, double>>& results, int cu
     const float tableX = 50.f;
     const float tableY = 330.f;
     const float rowHeight = 40.f;
-    const float colWidth[] = {150.f, 120.f, 150.f, 400.f, 250.f};
+    const float colWidth[] = {150.f, 120.f, 150.f, 600.f, 200.f};
     const int numCols = 5;
 
     // Calculate start and end indices for current page
@@ -366,6 +366,14 @@ void UI::drawResultsTable(const vector<pair<CrimeData, double>>& results, int cu
         resultCount.setString("Found " + to_string(results.size()) + " results" +
                   " (showing page " + to_string(currentPage + 1) + " of " +
                   to_string(totalPages) + ")");
+
+        Text secondsText;
+        secondsText.setFont(fontRegular);
+        secondsText.setString("Seconds for algorithm to run: ");
+        secondsText.setCharacterSize(15);
+        secondsText.setFillColor(Color(100, 100, 100));
+        secondsText.setPosition(320, 300);
+        window.draw(secondsText);
     }
 
     resultCount.setCharacterSize(14);
@@ -537,4 +545,5 @@ string UI::summarizeCrimeResults(const vector<pair<CrimeData, double>>& results)
 
     summaryString += "\n";
     return summaryString;
+        drawButton(windowWidth / 2 + 180.f, paginationY, 100.f, 40.f, "Next >");
 }

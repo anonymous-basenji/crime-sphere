@@ -309,8 +309,7 @@ void Frame::saveUserInput() {
         cout << "Latitude: " << latitude << ", Longitude: " << longitude
              << ", Radius: " << radius << ", Algorithm: " << algorithm << endl;
 
-        // Update the results to include the user's entry
-        //results = FileProcessing::getData();
+        clock_t before = clock();
 
         if (algorithm == "1") {
             KDTwoTree kdTree(FileProcessing::getData());
@@ -323,6 +322,9 @@ void Frame::saveUserInput() {
         else {
             results = {};
         }
+
+        clock_t duration = clock() - before;
+        cout << "duration: " << ((float)duration)/CLOCKS_PER_SEC << endl;
 
     } catch (const exception& e) {
         cerr << "Error saving user input: " << e.what() << endl;
