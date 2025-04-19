@@ -2,6 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include "FileProcessing.h"
 #include "UI.h"
+
+#include <iomanip>
+
 #include "Frame.h"
 
 #include <unordered_map>
@@ -351,6 +354,21 @@ void UI::centerText(Text& text, const float yPosition) const {
     text.setPosition(windowWidth / 2, yPosition);
 }
 
+// https://stackoverflow.com/questions/73682637/how-can-i-convert-military-time-to-regular-time-the-regular-time-must-be-a-stri
+string UI::fixTime(const string &time) const {
+    int timeAsNum = stoi(time);
+
+    int hours = timeAsNum / 100;
+    int minutes = timeAsNum % 100;
+
+    ostringstream oss;
+    oss << setw(2) << setfill('0') << hours
+        << ":"
+        << setw(2) << setfill('0') << minutes;
+
+    return oss.str();
+}
+
 void UI::drawResultsTable(const vector<pair<CrimeData, double>>& results, int currentPage, int itemsPerPage, double algorithmDuration) const {
 
     // Constants for table layout
@@ -432,7 +450,7 @@ void UI::drawResultsTable(const vector<pair<CrimeData, double>>& results, int cu
         // Cell values
         string cellValues[] = {
             data.date,
-            data.time,
+            fixTime(data.time),
             data.areaName,
             data.category,
             to_string(data.latitude).substr(0, 8) + ", " + to_string(data.longitude).substr(0, 9)

@@ -15,6 +15,8 @@ class UI {
 
     /* ======= Helpers ======= */
     void centerText(Text& text, float yPosition) const;
+
+    string fixTime(const string& time) const;
 public:
     UI(RenderWindow& window);
 
