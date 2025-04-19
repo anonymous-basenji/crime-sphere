@@ -6,7 +6,7 @@ using namespace std;
 using namespace sf;
 
 Frame::Frame(RenderWindow& window)
-    : window(window), ui(window), currentPage(HOME), latitudeText(""),
+    : window(window), ui(window), currentPage(RESULTS), latitudeText(""),
     latitudeSelected(false), longitudeText(""), longitudeSelected(false), radiusText(""), radiusSelected(false),
     algorithmText(""), algorithmSelected(false) {
 
@@ -56,7 +56,37 @@ void Frame::drawResultsScreen() const {
 }
 
 void Frame::switchPage(AppPage page) {
+    const AppPage previousPage = currentPage;
     currentPage = page;
+
+    // Adjust window size based on the page
+    if (page == RESULTS) {
+        window.setSize(Vector2u(window.getSize().x, 800));
+
+        // Create a new view with the same width but taller height
+        View view = window.getView();
+        view.setSize(view.getSize().x, 800);
+        view.setCenter(view.getCenter().x, 400);
+        window.setView(view);
+
+        // Adjust window position to keep it centered
+        const Vector2i windowPos = window.getPosition();
+        window.setPosition(windowPos - Vector2i(0, 100));
+    } else if (previousPage == RESULTS) {
+
+        // Coming from results page to another page
+        window.setSize(Vector2u(window.getSize().x, 600));
+
+        // Reset the view to the standard size
+        View view = window.getView();
+        view.setSize(view.getSize().x, 600);
+        view.setCenter(view.getCenter().x, 300);
+        window.setView(view);
+
+        // Adjust window position to keep it centered
+        const Vector2i windowPos = window.getPosition();
+        window.setPosition(windowPos + Vector2i(0, 100));
+    }
 }
 
 bool Frame::handleEvent(Event event) {
