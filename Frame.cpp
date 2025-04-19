@@ -6,8 +6,10 @@ using namespace std;
 using namespace sf;
 
 Frame::Frame(RenderWindow& window)
-    : window(window), ui(window), currentPage(SEARCH), latitudeText(""),
-    latitudeSelected(false), longitudeText(""), longitudeSelected(false), radiusText(""), radiusSelected(false) {
+    : window(window), ui(window), currentPage(HOME), latitudeText(""),
+    latitudeSelected(false), longitudeText(""), longitudeSelected(false), radiusText(""), radiusSelected(false),
+    algorithmText(""), algorithmSelected(false) {
+
     // Initialize with home screen size
     window.setSize(Vector2u(1680, 600));
 
@@ -90,13 +92,6 @@ bool Frame::handleEvent(Event event) {
                 switchPage(HOME);
                 return true;
             }
-            // Check if search button was clicked
-            if (mousePos.x >= 50 && mousePos.x <= 250 &&
-                mousePos.y >= 460 && mousePos.y <= 660) {
-
-                switchPage(RESULTS);
-                return true;
-            }
             // Check latitude text field
             if (mousePos.x >= 50 && mousePos.x <= 350 &&
                 mousePos.y >= 380 && mousePos.y <= 420) {
@@ -122,6 +117,16 @@ bool Frame::handleEvent(Event event) {
             if (mousePos.x >= 1140 && mousePos.x <= 1440 &&
                 mousePos.y >= 380 && mousePos.y <= 420) {
                 algorithmSelected = true;
+                return true;
+            }
+
+            // Check if search button was clicked
+            if (mousePos.x >= 50 && mousePos.x <= 250 &&
+                mousePos.y >= 460 && mousePos.y <= 660) {
+
+                saveUserInput();
+
+                switchPage(RESULTS);
                 return true;
             }
             break;
@@ -198,4 +203,58 @@ bool Frame::handleEvent(Event event) {
     }
 
     return false;
+}
+// Add this method to your Frame class implementation (Frame.cpp)
+
+void Frame::saveUserInput() {
+    CrimeData userInput;
+
+    try {
+        // Convert string input to appropriate types
+        if (!latitudeText.empty())
+            userInput.latitude = stod(latitudeText);
+        else
+            userInput.latitude = 0.0;
+
+        if (!longitudeText.empty())
+            userInput.longitude = stod(longitudeText);
+        else
+            userInput.longitude = 0.0;
+
+        if (!radiusText.empty()) {
+            userInput.radius = stoi(radiusText);
+            // Ensure radius is within valid range
+            if (userInput.radius < 1) userInput.radius = 1;
+            if (userInput.radius > 10) userInput.radius = 10;
+        }
+
+        if (!algorithmText.empty()) {
+            // Add what algorithm to call here depending on the option selected
+            if (algorithmText == "kd-tree") {
+                // load kd-tree
+                userInput.algorithm = "kd-tree";
+            }
+            else if (algorithmText == "heap") {
+                // load heap
+                userInput.algorithm = "heap";
+            }
+        }
+
+        // Add the new entry to the data vector
+        FileProcessing::addCrimeData(userInput);
+
+        // Also add the search parameters for filtering
+        FileProcessing::addSearchParameters(userInput.latitude, userInput.longitude, userInput.radius, userInput.algorithm);
+
+        // Print confirmation message
+        cout << "User input saved to data vector." << endl;
+        cout << "Latitude: " << userInput.latitude << ", Longitude: " << userInput.longitude
+             << ", Radius: " << userInput.radius << ", Algorithm: " << userInput.algorithm << endl;
+
+        // Update the results to include the user's entry
+        results = FileProcessing::getData();
+
+    } catch (const exception& e) {
+        cerr << "Error saving user input: " << e.what() << endl;
+    }
 }

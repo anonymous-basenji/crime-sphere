@@ -12,6 +12,7 @@ struct CrimeData {
     string date;
     string time;
     string areaName;
+    string algorithm;
 };
 
 class FileProcessing {
@@ -21,14 +22,15 @@ class FileProcessing {
     static vector<string> crimeTypes;
     static vector<string> crimeDates;
     static vector<string> crimeAreaNames;
+    static vector<string> crimeAlgorithm;
 
     static vector<CrimeData> data;
 public:
     FileProcessing();
 
     static void ReadFile();
-    static void addSearchParameters(const double latitude, const double longitude, const int radius);
-    static void addCrimeTypeParameters(const string& type, const int radius);
+    static void addSearchParameters(const double latitude, const double longitude, const int radius, const string& algorithm);
+    static void addCrimeData(const CrimeData& crimeData);
 
     /* ========= Getters ========= */
     static vector<double> getCrimeLongitude();
@@ -37,5 +39,6 @@ public:
     static vector<string> getCrimeType();
     static vector<string> getCrimeDate();
     static vector<string> getCrimeAreaName();
+    static vector<string> getCrimeAlgorithm();
     static vector<CrimeData> getData();
 };

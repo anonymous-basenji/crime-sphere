@@ -340,65 +340,11 @@ void UI::drawResultsTable(const vector<CrimeData>& results) const {
     const float tableX = 50.f;
     const float tableY = 330.f;
     const float rowHeight = 40.f;
-    const float colWidth[] = {150.f, 150.f, 250.f, 250.f, 250.f};
+    const float colWidth[] = {150.f, 120.f, 150.f, 300.f, 250.f};
     const int numCols = 5;
 
-    // Create fake data if there are no results
-    vector<CrimeData> displayData;
-    if (results.empty()) {
-        // Sample fake data
-        CrimeData sample1;
-        sample1.date = "04/15/2024";
-        sample1.time = "14:35";
-        sample1.areaName = "Downtown";
-        sample1.category = "Theft";
-        sample1.latitude = 34.052235;
-        sample1.longitude = -118.243683;
-
-        CrimeData sample2;
-        sample2.date = "04/16/2024";
-        sample2.time = "19:42";
-        sample2.areaName = "Hollywood";
-        sample2.category = "Vandalism";
-        sample2.latitude = 34.092809;
-        sample2.longitude = -118.328661;
-
-        CrimeData sample3;
-        sample3.date = "04/17/2024";
-        sample3.time = "23:15";
-        sample3.areaName = "Venice Beach";
-        sample3.category = "Assault";
-        sample3.latitude = 33.985047;
-        sample3.longitude = -118.469116;
-
-        CrimeData sample4;
-        sample4.date = "04/18/2024";
-        sample4.time = "08:27";
-        sample4.areaName = "Silver Lake";
-        sample4.category = "Burglary";
-        sample4.latitude = 34.089958;
-        sample4.longitude = -118.267254;
-
-        CrimeData sample5;
-        sample5.date = "04/18/2024";
-        sample5.time = "11:03";
-        sample5.areaName = "Echo Park";
-        sample5.category = "Auto Theft";
-        sample5.latitude = 34.072231;
-        sample5.longitude = -118.259939;
-
-        displayData.push_back(sample1);
-        displayData.push_back(sample2);
-        displayData.push_back(sample3);
-        displayData.push_back(sample4);
-        displayData.push_back(sample5);
-    } else {
-        displayData = results;
-    }
-
     const int maxRows = 10;
-    // const int rowCount = min(maxRows, static_cast<int>(results.size()));
-    const int rowCount = min(maxRows, static_cast<int>(displayData.size()));
+    const int rowCount = min(maxRows, static_cast<int>(results.size()));
 
     // Results count
     Text resultCount;
@@ -446,7 +392,7 @@ void UI::drawResultsTable(const vector<CrimeData>& results) const {
     // Draw table rows
     for (int row = 0; row < rowCount; row++) {
         // const CrimeData& data = results[row];
-        const CrimeData& data = displayData[row];
+        const CrimeData& data = results[row];
         float y = tableY + (row + 1) * rowHeight;
 
         // Row background (alternating colors for readability)

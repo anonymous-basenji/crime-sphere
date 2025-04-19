@@ -40,4 +40,7 @@ public:
     /* ======= Event Listeners ======= */
     bool handleEvent(Event event);
     void switchPage(AppPage page);
+
+    /* ======= Data Management ======= */
+    void saveUserInput();
 };

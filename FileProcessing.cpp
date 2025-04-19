@@ -16,6 +16,7 @@ vector<int> FileProcessing::crimeRadii;
 vector<string> FileProcessing::crimeTypes;
 vector<string> FileProcessing::crimeDates;
 vector<string> FileProcessing::crimeAreaNames;
+vector<string> FileProcessing::crimeAlgorithm;
 
 vector<CrimeData> FileProcessing::data;
 
@@ -62,15 +63,23 @@ void FileProcessing::ReadFile() {
     }
 }
 
-void FileProcessing::addSearchParameters(const double latitude, const double longitude, const int radius) {
+void FileProcessing::addSearchParameters(const double latitude, const double longitude, const int radius,
+    const string& algorithm) {
     crimeLatitudes.push_back(latitude);
     crimeLongitudes.push_back(longitude);
     crimeRadii.push_back(radius);
+    crimeAlgorithm.push_back(algorithm);
 }
 
-void FileProcessing::addCrimeTypeParameters(const string& type, const int radius) {
-    crimeTypes.push_back(type);
-    crimeRadii.push_back(radius);
+void FileProcessing::addCrimeData(const CrimeData& crimeData) {
+    data.push_back(crimeData);
+
+    crimeLatitudes.push_back(crimeData.latitude);
+    crimeLongitudes.push_back(crimeData.longitude);
+
+    if (crimeData.radius > 0) {
+        crimeRadii.push_back(crimeData.radius);
+    }
 }
 
 /* ========= Getters ========= */
@@ -86,6 +95,10 @@ vector<int> FileProcessing::getCrimeRadii() {
     return crimeRadii;
 }
 
+vector<string> FileProcessing::getCrimeType() {
+    return crimeTypes;
+}
+
 vector<string> FileProcessing::getCrimeDate() {
     return crimeDates;
 }
@@ -94,6 +107,11 @@ vector<string> FileProcessing::getCrimeAreaName() {
     return crimeAreaNames;
 }
 
+vector<string> FileProcessing::getCrimeAlgorithm() {
+    return crimeAlgorithm;
+}
+
 vector<CrimeData> FileProcessing::getData() {
     return data;
 }
+
