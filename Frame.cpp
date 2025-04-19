@@ -1,6 +1,8 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Frame.h"
+#include "KDTwoTree.h"
+#include "CrimeHeap.h"
 
 using namespace std;
 using namespace sf;
@@ -192,7 +194,7 @@ bool Frame::handleEvent(Event event) {
                 resultsPage++;
 
                 drawFrame();
-                
+
                 return true;
             }
             break;
@@ -285,15 +287,12 @@ void Frame::saveUserInput() {
         }
 
         if (!algorithmText.empty()) {
-            // Add what algorithm to call here depending on the option selected
-            if (algorithmText == "kd-tree") {
-                // load kd-tree
-                userInput.algorithm = "kd-tree";
+            // Call what algorithm to use
+            if (userInput.algorithm == "K-D Tree") {
+                // KDTwoTree kdTree(userInput.radius, userInput.latitude, userInput.longitude);
             }
-            else if (algorithmText == "heap") {
-                // load heap
-                userInput.algorithm = "heap";
-            }
+            else if (userInput.algorithm == "Heap")
+                CrimeHeap heap(userInput.radius, userInput.latitude, userInput.longitude);
         }
 
         // Add the new entry to the data vector

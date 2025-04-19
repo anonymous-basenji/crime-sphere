@@ -27,9 +27,11 @@ add_executable(main
         Frame.cpp
         Frame.h
         UI.cpp
-        UI.h)
+        UI.h
         KDTwoTree.cpp
         KDTwoTree.h
+        CrimeHeap.cpp
+        CrimeHeap.h
 )
 
 target_link_libraries(main PRIVATE sfml-graphics sfml-window sfml-system)

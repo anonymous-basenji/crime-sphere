@@ -7,6 +7,7 @@ using namespace std;
 struct CrimeData {
     double longitude;
     double latitude;
+    int radius;
     string category;
     string generalCategory;
     string date;
