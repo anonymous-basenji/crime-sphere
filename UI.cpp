@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "FileProcessing.h"
 #include "UI.h"
+#include "Frame.h"
 
 #include <unordered_map>
 
@@ -233,7 +234,8 @@ void UI::drawForm(const string& latitudeText, const bool& latitudeSelected, cons
     drawButton(textPadding, 460, 200, 50, "SEARCH");
 }
 
-void UI::drawResults(const vector<pair<CrimeData, double>>& results, int currentPage, int itemsPerPage, int totalPages) const {
+void UI::drawResults(const vector<pair<CrimeData, double>>& results, int currentPage, int itemsPerPage, int totalPages,
+    double algorithmDuration) const {
     const float textPadding = 50;
 
     // Add back button
@@ -245,10 +247,19 @@ void UI::drawResults(const vector<pair<CrimeData, double>>& results, int current
     back.setPosition(textPadding, 260);
     window.draw(back);
 
-    drawResultsTable(results, currentPage, itemsPerPage);
+    drawResultsTable(results, currentPage, itemsPerPage, algorithmDuration);
 
-    if (!results.empty() && totalPages > 1)
+    if (!results.empty() && totalPages > 1) {
         drawPagination(currentPage, totalPages);
+
+        Text summary;
+        summary.setFont(fontRegular);
+        summary.setCharacterSize(14);
+        summary.setFillColor(Color(44, 62, 80));
+        summary.setString(summarizeCrimeResults(results));
+        summary.setPosition(1300, 300);
+        window.draw(summary);
+    }
 }
 
 void UI::drawTextField(float x, float y, float width, float height, const string& placeholder,
@@ -340,7 +351,7 @@ void UI::centerText(Text& text, const float yPosition) const {
     text.setPosition(windowWidth / 2, yPosition);
 }
 
-void UI::drawResultsTable(const vector<pair<CrimeData, double>>& results, int currentPage, int itemsPerPage) const {
+void UI::drawResultsTable(const vector<pair<CrimeData, double>>& results, int currentPage, int itemsPerPage, double algorithmDuration) const {
 
     // Constants for table layout
     const float tableX = 50.f;
@@ -369,10 +380,10 @@ void UI::drawResultsTable(const vector<pair<CrimeData, double>>& results, int cu
 
         Text secondsText;
         secondsText.setFont(fontRegular);
-        secondsText.setString("Seconds for algorithm to run: ");
+        secondsText.setString("Seconds for algorithm to run: " + to_string(algorithmDuration));
         secondsText.setCharacterSize(15);
         secondsText.setFillColor(Color(100, 100, 100));
-        secondsText.setPosition(320, 300);
+        secondsText.setPosition(400, 300);
         window.draw(secondsText);
     }
 
@@ -494,7 +505,7 @@ string UI::summarizeCrimeResults(const vector<pair<CrimeData, double>>& results)
     sort(sortedCategories.begin(), sortedCategories.end(), comparer);
 
     summaryString += "Crimes by General Category:\n";
-    for (int i = 0; i < sortedCategories.size(); ++i) {
+    for (int i = 0; i < sortedCategories.size() && i < 10; ++i) {
         summaryString += " - " + sortedCategories[i].first + ": " + to_string(sortedCategories[i].second) + "\n";
     }
     summaryString += "\n";
@@ -545,5 +556,4 @@ string UI::summarizeCrimeResults(const vector<pair<CrimeData, double>>& results)
 
     summaryString += "\n";
     return summaryString;
-        drawButton(windowWidth / 2 + 180.f, paginationY, 100.f, 40.f, "Next >");
 }

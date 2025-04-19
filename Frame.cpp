@@ -8,7 +8,7 @@ using namespace std;
 using namespace sf;
 
 Frame::Frame(RenderWindow& window)
-    : window(window), ui(window), currentPage(SEARCH), latitudeText(""),
+    : window(window), ui(window), currentPage(HOME), latitudeText(""),
     latitudeSelected(false), longitudeText(""), longitudeSelected(false), radiusText(""), radiusSelected(false),
     algorithmText(""), algorithmSelected(false), resultsPage(0), resultsPerPage(10) {
 
@@ -54,7 +54,7 @@ void Frame::drawSearchScreen() const {
 
 void Frame::drawResultsScreen() const {
     ui.drawHeroBar("RESULTS");
-    ui.drawResults(results, resultsPage, resultsPerPage, getTotalPages());
+    ui.drawResults(results, resultsPage, resultsPerPage, getTotalPages(), getAlgorithmDuration());
 }
 
 void Frame::switchPage(AppPage page) {
@@ -97,7 +97,7 @@ bool Frame::handleEvent(Event event) {
         Vector2i mousePos = Mouse::getPosition(window);
 
         // Print mouse position for debugging
-        cout << "Mouse clicked at: " << mousePos.x << ", " << mousePos.y << endl;
+        // cout << "Mouse clicked at: " << mousePos.x << ", " << mousePos.y << endl;
 
         // Deselect all text fields
         latitudeSelected = false;
@@ -110,7 +110,7 @@ bool Frame::handleEvent(Event event) {
         case HOME:
             // Check if the START EXPLORING button was clicked
             if (mousePos.x >= 80 && mousePos.x <= 280 &&
-                mousePos.y >= 280 && mousePos.y <= 416) {
+                mousePos.y >= 120 && mousePos.y <= 450) {
 
                 switchPage(SEARCH);
                 return true;
@@ -324,7 +324,8 @@ void Frame::saveUserInput() {
         }
 
         clock_t duration = clock() - before;
-        cout << "duration: " << ((float)duration)/CLOCKS_PER_SEC << endl;
+        algorithmDuration = ((float)duration)/CLOCKS_PER_SEC;
+        // cout << "duration: " << ((float)algorithmDuration)/CLOCKS_PER_SEC << endl;
 
     } catch (const exception& e) {
         cerr << "Error saving user input: " << e.what() << endl;
@@ -345,4 +346,8 @@ void Frame::prevPage() {
 int Frame::getTotalPages() const {
     if (results.empty()) return 0;
     return (results.size() + resultsPerPage - 1) / resultsPerPage;
+}
+
+double Frame::getAlgorithmDuration() const {
+    return algorithmDuration;
 }

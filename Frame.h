@@ -23,6 +23,7 @@ class Frame {
     bool longitudeSelected;
     bool radiusSelected;
     bool algorithmSelected;
+    double algorithmDuration;
 
     vector<pair<CrimeData, double>> results;
     int resultsPage;
@@ -48,4 +49,6 @@ public:
     void nextPage();
     void prevPage();
     int getTotalPages() const;
+
+    double getAlgorithmDuration() const;
 };
