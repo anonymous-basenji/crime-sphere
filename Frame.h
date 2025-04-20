@@ -51,4 +51,5 @@ public:
     int getTotalPages() const;
 
     double getAlgorithmDuration() const;
+    void openURL(const string& url);
 };

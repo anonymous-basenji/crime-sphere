@@ -103,99 +103,151 @@ bool Frame::handleEvent(Event event) {
         radiusSelected = false;
         algorithmSelected = false;
 
+        cout << "Mouse clicked: " << mousePos.x << " " << mousePos.y << endl;
+
         // Handle events based on current page
         switch (currentPage) {
-        case HOME:
-            // Check if the START EXPLORING button was clicked
-            if (mousePos.x >= 80 && mousePos.x <= 280 &&
-                mousePos.y >= 120 && mousePos.y <= 450) {
+            case HOME:
+                // Check if the START EXPLORING button was clicked
+                if (mousePos.x >= 80 && mousePos.x <= 280 &&
+                    mousePos.y >= 120 && mousePos.y <= 450) {
 
-                switchPage(SEARCH);
-                return true;
-            }
+                    switchPage(SEARCH);
+                    return true;
+                }
+
+                // Add events to Video and Documentation
+                if (mousePos.x >= 1410 && mousePos.x <= 1456 &&
+                     mousePos.y >= 38 && mousePos.y <= 50) {
+                    // Open YouTube video
+                    string youtubeUrl = "https://youtu.be/1dyumKsxfC0";
+                    openURL(youtubeUrl);
+                    return true;
+                }
+                if (mousePos.x >= 1503 && mousePos.x <= 1626 &&
+                    mousePos.y >= 38 && mousePos.y <= 50) {
+                    // Open Documentation
+                    string readme = "https://github.com/anonymous-basenji/crime-sphere?tab=readme-ov-file#crime-sphere";
+                    openURL(readme);
+                    return true;
+                }
             break;
 
-        case SEARCH:
-            // Check if back button was clicked
-            if (mousePos.x >= 50 && mousePos.x <= 275 &&
-                mousePos.y >= 56 && mousePos.y <= 282) {
+            case SEARCH:
+                // Check if back button was clicked
+                if (mousePos.x >= 50 && mousePos.x <= 275 &&
+                    mousePos.y >= 56 && mousePos.y <= 282) {
 
-                switchPage(HOME);
-                return true;
-            }
+                    switchPage(HOME);
+                    return true;
+                }
 
-            // Check latitude text field
-            if (mousePos.x >= 50 && mousePos.x <= 350 &&
-                mousePos.y >= 380 && mousePos.y <= 420) {
-                latitudeSelected = true;
-                return true;
-            }
+                // Check latitude text field
+                if (mousePos.x >= 50 && mousePos.x <= 350 &&
+                    mousePos.y >= 380 && mousePos.y <= 420) {
+                    latitudeSelected = true;
+                    return true;
+                }
 
-            // Check longitude text field
-            if (mousePos.x >= 420 && mousePos.x <= 720 &&
-                mousePos.y >= 380 && mousePos.y <= 420) {
-                longitudeSelected = true;
-                return true;
-            }
+                // Check longitude text field
+                if (mousePos.x >= 420 && mousePos.x <= 720 &&
+                    mousePos.y >= 380 && mousePos.y <= 420) {
+                    longitudeSelected = true;
+                    return true;
+                }
 
-            // Check radius text field
-            if (mousePos.x >= 780 && mousePos.x <= 1080 &&
-                mousePos.y >= 380 && mousePos.y <= 420) {
-                radiusSelected = true;
-                return true;
-            }
+                // Check radius text field
+                if (mousePos.x >= 780 && mousePos.x <= 1080 &&
+                    mousePos.y >= 380 && mousePos.y <= 420) {
+                    radiusSelected = true;
+                    return true;
+                }
 
-            // Check algorithm text field
-            if (mousePos.x >= 1140 && mousePos.x <= 1440 &&
-                mousePos.y >= 380 && mousePos.y <= 420) {
-                algorithmSelected = true;
-                return true;
-            }
+                // Check algorithm text field
+                if (mousePos.x >= 1140 && mousePos.x <= 1440 &&
+                    mousePos.y >= 380 && mousePos.y <= 420) {
+                    algorithmSelected = true;
+                    return true;
+                }
 
-            // Check if search button was clicked
-            if (mousePos.x >= 50 && mousePos.x <= 250 &&
-                mousePos.y >= 460 && mousePos.y <= 660) {
+                // Check if search button was clicked
+                if (mousePos.x >= 50 && mousePos.x <= 250 &&
+                    mousePos.y >= 460 && mousePos.y <= 660) {
 
-                saveUserInput();
+                    saveUserInput();
 
-                switchPage(RESULTS);
-                return true;
-            }
-            break;
+                    switchPage(RESULTS);
+                    return true;
+                }
 
-        case RESULTS:
-            // Check if back button was clicked
-            if (mousePos.x >= 50 && mousePos.x <= 275 &&
-                mousePos.y >= 56 && mousePos.y <= 282) {
+                // Add events to Video and Documentation
+                if (mousePos.x >= 1410 && mousePos.x <= 1456 &&
+                     mousePos.y >= 38 && mousePos.y <= 50) {
+                    // Open YouTube video
+                    string youtubeUrl = "https://youtu.be/1dyumKsxfC0";
+                    openURL(youtubeUrl);
+                    return true;
+                }
+                if (mousePos.x >= 1503 && mousePos.x <= 1626 &&
+                    mousePos.y >= 38 && mousePos.y <= 50) {
+                    // Open Documentation
+                    string readme = "https://github.com/anonymous-basenji/crime-sphere?tab=readme-ov-file#crime-sphere";
+                    openURL(readme);
+                    return true;
+                }
 
-                switchPage(SEARCH);
-                return true;
-            }
+                break;
 
-            // Add pagination button handling
-            const float windowWidth = static_cast<float>(window.getSize().x),
-            paginationY = 800.f;
+            case RESULTS:
+                // Check if back button was clicked
+                if (mousePos.x >= 50 && mousePos.x <= 275 &&
+                    mousePos.y >= 56 && mousePos.y <= 282) {
 
-            // Previous button
-            if (resultsPage > 0 &&
-                mousePos.x >= windowWidth / 2 - 250.f && mousePos.x <= windowWidth / 2 - 130.f &&
-                mousePos.y >= paginationY && mousePos.y <= paginationY + 40.f) {
+                    switchPage(SEARCH);
+                    return true;
+                    }
 
-                resultsPage--;
-                return true;
-            }
+                // Add pagination button handling
+                const float windowWidth = static_cast<float>(window.getSize().x),
+                paginationY = 800.f;
 
-            // Next button
-            if (resultsPage < getTotalPages() - 1 &&
-                mousePos.x >= windowWidth / 2 + 80.f && mousePos.x <= windowWidth / 2 + 180.f &&
-                mousePos.y >= paginationY && mousePos.y <= paginationY + 40.f) {
+                // Previous button
+                if (resultsPage > 0 &&
+                    mousePos.x >= windowWidth / 2 - 250.f && mousePos.x <= windowWidth / 2 - 130.f &&
+                    mousePos.y >= paginationY && mousePos.y <= paginationY + 40.f) {
 
-                resultsPage++;
+                    resultsPage--;
+                    return true;
+                    }
 
-                drawFrame();
+                // Next button
+                if (resultsPage < getTotalPages() - 1 &&
+                    mousePos.x >= windowWidth / 2 + 80.f && mousePos.x <= windowWidth / 2 + 180.f &&
+                    mousePos.y >= paginationY && mousePos.y <= paginationY + 40.f) {
 
-                return true;
-            }
+                    resultsPage++;
+
+                    drawFrame();
+
+                    return true;
+                }
+
+
+                // Add events to Video and Documentation
+                if (mousePos.x >= 1410 && mousePos.x <= 1456 &&
+                     mousePos.y >= 38 && mousePos.y <= 50) {
+                    // Open YouTube video
+                    string youtubeUrl = "https://youtu.be/1dyumKsxfC0";
+                    openURL(youtubeUrl);
+                    return true;
+                }
+                if (mousePos.x >= 1503 && mousePos.x <= 1626 &&
+                    mousePos.y >= 38 && mousePos.y <= 50) {
+                    // Open Documentation
+                    string readme = "https://github.com/anonymous-basenji/crime-sphere?tab=readme-ov-file#crime-sphere";
+                    openURL(readme);
+                    return true;
+                }
             break;
         }
     }
@@ -344,4 +396,22 @@ int Frame::getTotalPages() const {
 
 double Frame::getAlgorithmDuration() const {
     return algorithmDuration;
+}
+
+// https://en.sfml-dev.org/forums/index.php?topic=28740.0
+// https://stackoverflow.com/questions/17347950/how-do-i-open-a-url-from-c
+void Frame::openURL(const string& url) {
+    #ifdef _WIN32
+        // Windows
+        string command = "start " + url;
+        system(command.c_str());
+    #elif __APPLE__
+        // macOS
+        string command = "open " + url;
+        system(command.c_str());
+    #else
+        // Linux and other Unix-like systems
+        string command = "xdg-open " + url;
+        system(command.c_str());
+    #endif
 }
