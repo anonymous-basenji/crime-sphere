@@ -23,7 +23,7 @@ FetchContent_MakeAvailable(SFML)
 add_executable(main
         main.cpp
         FileProcessing.cpp
-        Helpers.cpp
+        FileProcessing.h
         Frame.cpp
         Frame.h
         UI.cpp

@@ -92,12 +92,10 @@ void Frame::switchPage(AppPage page) {
     }
 }
 
+// https://www.sfml-dev.org/tutorials/3.0/window/events/
 bool Frame::handleEvent(Event event) {
     if (event.type == Event::MouseButtonPressed) {
-        Vector2i mousePos = Mouse::getPosition(window);
-
-        // Print mouse position for debugging
-        // cout << "Mouse clicked at: " << mousePos.x << ", " << mousePos.y << endl;
+        const Vector2i mousePos = Mouse::getPosition(window);
 
         // Deselect all text fields
         latitudeSelected = false;
@@ -125,6 +123,7 @@ bool Frame::handleEvent(Event event) {
                 switchPage(HOME);
                 return true;
             }
+
             // Check latitude text field
             if (mousePos.x >= 50 && mousePos.x <= 350 &&
                 mousePos.y >= 380 && mousePos.y <= 420) {
@@ -203,6 +202,7 @@ bool Frame::handleEvent(Event event) {
     else if (event.type == Event::TextEntered) {
         if (currentPage == SEARCH) {
             // Only handle printable ASCII characters and backspace
+            // https://www.sfml-dev.org/tutorials/3.0/window/events/#the-focuslost-and-focusgained-events
             if ((event.text.unicode >= 32 && event.text.unicode < 127) ||
                 event.text.unicode == 8) {
 
@@ -262,14 +262,16 @@ bool Frame::handleEvent(Event event) {
 
     return false;
 }
-// Add this method to your Frame class implementation (Frame.cpp)
+
+// Save user input from form
 void Frame::saveUserInput() {
-    double latitude;
-    double longitude;
-    double radius;
-    string algorithm;
 
     try {
+        double latitude;
+        double longitude;
+        double radius = 0;
+        string algorithm;
+
         // Convert string input to appropriate types
         if (!latitudeText.empty())
             latitude = stod(latitudeText);
@@ -290,26 +292,19 @@ void Frame::saveUserInput() {
 
         if (!algorithmText.empty()) {
             // Call what algorithm to use
-            if (algorithmText == "1") {
+            if (algorithmText == "1")
                 algorithm = "1";
-            }
-            else if (algorithmText == "2") {
+            else if (algorithmText == "2")
                 algorithm = "2";
-            }
-            else {
+            else
                 algorithm = "0";
-            }
         }
 
-        // Also add the search parameters for filtering
+        // Add the search parameters for filtering
         FileProcessing::addSearchParameters(latitude, longitude, radius, algorithm);
 
-        // Print confirmation message
-        cout << "User input saved to data vector." << endl;
-        cout << "Latitude: " << latitude << ", Longitude: " << longitude
-             << ", Radius: " << radius << ", Algorithm: " << algorithm << endl;
-
-        clock_t before = clock();
+        // Time how fast algorithms run
+        const clock_t before = clock();
 
         if (algorithm == "1") {
             KDTwoTree kdTree(FileProcessing::getData());
@@ -325,7 +320,6 @@ void Frame::saveUserInput() {
 
         clock_t duration = clock() - before;
         algorithmDuration = ((float)duration)/CLOCKS_PER_SEC;
-        // cout << "duration: " << ((float)algorithmDuration)/CLOCKS_PER_SEC << endl;
 
     } catch (const exception& e) {
         cerr << "Error saving user input: " << e.what() << endl;

@@ -2,10 +2,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-
 #include "FileProcessing.h"
-
-#include "Helpers.h"
 
 using namespace std;
 
@@ -13,9 +10,6 @@ using namespace std;
 vector<double> FileProcessing::crimeLongitudes;
 vector<double> FileProcessing::crimeLatitudes;
 vector<int> FileProcessing::crimeRadii;
-vector<string> FileProcessing::crimeTypes;
-vector<string> FileProcessing::crimeDates;
-vector<string> FileProcessing::crimeAreaNames;
 vector<string> FileProcessing::crimeAlgorithm;
 
 vector<CrimeData> FileProcessing::data;
@@ -36,13 +30,12 @@ void FileProcessing::ReadFile() {
     // Skip header
     getline(stream, line);
 
-    // Read file line by line - 10 lines for debugging
+    // Read file line by line
     while (getline(stream, line)) {
         CrimeData crime;
         std::stringstream lineStream(line);
 
         // Extract the date, time, area, latitude/longitude, and general category
-
         getline(lineStream, crime.date,',');
         getline(lineStream, crime.time,',');
 
@@ -72,30 +65,6 @@ void FileProcessing::addSearchParameters(const double latitude, const double lon
 }
 
 /* ========= Getters ========= */
-vector<double> FileProcessing::getCrimeLongitude() {
-    return crimeLongitudes;
-}
-
-vector<double> FileProcessing::getCrimeLatitude() {
-    return crimeLatitudes;
-}
-
-vector<int> FileProcessing::getCrimeRadii() {
-    return crimeRadii;
-}
-
-vector<string> FileProcessing::getCrimeType() {
-    return crimeTypes;
-}
-
-vector<string> FileProcessing::getCrimeDate() {
-    return crimeDates;
-}
-
-vector<string> FileProcessing::getCrimeAreaName() {
-    return crimeAreaNames;
-}
-
 vector<string> FileProcessing::getCrimeAlgorithm() {
     return crimeAlgorithm;
 }

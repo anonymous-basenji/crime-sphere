@@ -1,10 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-
-#include "heap/CrimeHeap.h"
-#include "FileProcessing.h"
 #include "Frame.h"
-#include "Helpers.h"
 
 using namespace std;
 using namespace sf;

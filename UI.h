@@ -34,12 +34,12 @@ public:
     void drawHeader(float boxMargin, float boxPosY) const;
 
     /* ======= Draw Search Elements ======= */
-    void drawForm(const string& latitudeText, const bool& latitudeSelected, const string& longitudeText,
-        const bool& longitudeSelected, const string& radiusText, const bool& radiusSelected, const string& algorithmText,
-        const bool& algorithmSelected) const;
     void drawMainSection(const string& latitudeText, const bool& latitudeSelected, const string& longitudeText,
     const bool& longitudeSelected, const string& radiusText, const bool& radiusSelected, const string& algorithmText,
     const bool& algorithmSelected) const;
+    void drawForm(const string& latitudeText, const bool& latitudeSelected, const string& longitudeText,
+        const bool& longitudeSelected, const string& radiusText, const bool& radiusSelected, const string& algorithmText,
+        const bool& algorithmSelected) const;
     void drawTextField(float x, float y, float width, float height,
         const string& placeholder, const string& textValue, const bool& selected) const;
 

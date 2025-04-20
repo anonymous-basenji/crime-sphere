@@ -1,13 +1,10 @@
 #include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <unordered_map>
 #include <SFML/Graphics.hpp>
 #include "FileProcessing.h"
 #include "UI.h"
-
-#include <iomanip>
-
-#include "Frame.h"
-
-#include <unordered_map>
 
 using namespace std;
 using namespace sf;
@@ -169,7 +166,8 @@ void UI::drawMainSection(const string& latitudeText, const bool& latitudeSelecte
 
     Text mainSectionText;
     mainSectionText.setFont(fontBold);
-    mainSectionText.setString("Explore 2024 crime data across Los Angeles. Enter a location and set your radius to discover incidents happening nearby - fast, focused, and accurate.");
+    mainSectionText.setString("Explore 2024 crime data across Los Angeles. Enter a location and set your radius to "
+                              "discover incidents happening nearby - fast, focused, and accurate.");
     mainSectionText.setCharacterSize(20);
     mainSectionText.setFillColor(Color(44, 62, 80));
     mainSectionText.setPosition(textPadding, 300);
@@ -185,7 +183,7 @@ void UI::drawForm(const string& latitudeText, const bool& latitudeSelected, cons
 
     const float textPadding = 50;
 
-    // Create menu options
+    // Create form input fields
     Text latitudeLabel;
     latitudeLabel.setFont(fontRegular);
     latitudeLabel.setString("Enter latitude");
@@ -235,34 +233,6 @@ void UI::drawForm(const string& latitudeText, const bool& latitudeSelected, cons
     algorithmText, algorithmSelected);
 
     drawButton(textPadding, 460, 200, 50, "SEARCH");
-}
-
-void UI::drawResults(const vector<pair<CrimeData, double>>& results, int currentPage, int itemsPerPage, int totalPages,
-    double algorithmDuration) const {
-    const float textPadding = 50;
-
-    // Add back button
-    Text back;
-    back.setFont(fontBold);
-    back.setString("Back to Search");
-    back.setCharacterSize(16);
-    back.setFillColor(Color(52, 152, 219));
-    back.setPosition(textPadding, 260);
-    window.draw(back);
-
-    drawResultsTable(results, currentPage, itemsPerPage, algorithmDuration);
-
-    if (!results.empty() && totalPages > 1) {
-        drawPagination(currentPage, totalPages);
-
-        Text summary;
-        summary.setFont(fontRegular);
-        summary.setCharacterSize(14);
-        summary.setFillColor(Color(44, 62, 80));
-        summary.setString(summarizeCrimeResults(results));
-        summary.setPosition(1300, 300);
-        window.draw(summary);
-    }
 }
 
 void UI::drawTextField(float x, float y, float width, float height, const string& placeholder,
@@ -319,6 +289,35 @@ void UI::drawTextField(float x, float y, float width, float height, const string
     }
 }
 
+void UI::drawResults(const vector<pair<CrimeData, double>>& results, int currentPage, int itemsPerPage, int totalPages,
+    double algorithmDuration) const {
+    const float textPadding = 50;
+
+    // Add back button
+    Text back;
+    back.setFont(fontBold);
+    back.setString("Back to Search");
+    back.setCharacterSize(16);
+    back.setFillColor(Color(52, 152, 219));
+    back.setPosition(textPadding, 260);
+    window.draw(back);
+
+    drawResultsTable(results, currentPage, itemsPerPage, algorithmDuration);
+
+    // Add summary to the right of the table
+    if (!results.empty() && totalPages > 1) {
+        drawPagination(currentPage, totalPages);
+
+        Text summary;
+        summary.setFont(fontRegular);
+        summary.setCharacterSize(14);
+        summary.setFillColor(Color(44, 62, 80));
+        summary.setString(summarizeCrimeResults(results));
+        summary.setPosition(1300, 300);
+        window.draw(summary);
+    }
+}
+
 void UI::drawButton(const float x, const float y, const float width, const float height, const string& textString) const {
     // Background rectangle
     RectangleShape button(Vector2f(width, height));
@@ -342,7 +341,6 @@ void UI::drawButton(const float x, const float y, const float width, const float
     window.draw(text);
 }
 
-/* ======= Helpers - To be moved to Helpers.cpp ======= */
 void UI::centerText(Text& text, const float yPosition) const {
     // Get window size for centering
     const Vector2u windowSize = window.getSize();
@@ -381,7 +379,6 @@ void UI::drawResultsTable(const vector<pair<CrimeData, double>>& results, int cu
     // Calculate start and end indices for current page
     int startIdx = currentPage * itemsPerPage;
     int endIdx = min(startIdx + itemsPerPage, static_cast<int>(results.size()));
-    const int maxRows = 20;
     const int rowCount = endIdx - startIdx;
 
     // Show results
@@ -437,7 +434,6 @@ void UI::drawResultsTable(const vector<pair<CrimeData, double>>& results, int cu
 
     // Draw table rows
     for (int row = 0; row < rowCount; row++) {
-        // const CrimeData& data = results[row];
         const CrimeData& data = results[startIdx + row].first;
         float y = tableY + (row + 1) * rowHeight;
 
