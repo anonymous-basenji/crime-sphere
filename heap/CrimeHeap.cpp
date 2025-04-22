@@ -118,9 +118,6 @@ pair<CrimeData, double> CrimeHeap::top() const {
     return heap[0];
 }
 
-vector<pair<CrimeData, double>> CrimeHeap::getVector() const {
-    return heap;
-}
 
 pair<CrimeData, double> CrimeHeap::pop() {
     pair<CrimeData, double> returnVal = heap[0];

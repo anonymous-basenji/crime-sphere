@@ -30,7 +30,6 @@ class CrimeHeap {
         void heapifyUp(int i);
         void heapifyDown(int i);
         pair<CrimeData, double> top() const;
-        vector<pair<CrimeData, double>> getVector() const;
         pair<CrimeData, double> pop();
 };
 
