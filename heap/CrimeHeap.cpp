@@ -22,17 +22,8 @@ CrimeHeap::CrimeHeap(int radParam, double latParam, double longParam) {
     }
 }
 
-vector<CrimeData> CrimeHeap::getCrimes() {
-    vector<CrimeData> output;
-    CrimeHeap tempHeap(radius, latitude, longitude);
-    while (!heap.empty()) {
-        pair<CrimeData, double> crimePair = top();
-        CrimeData crime = crimePair.first;
-        output.push_back(crime);
-        pop();
-    }
-    heap = tempHeap.getVector(); // replace heap with popped elements
-    return output;
+vector<pair<CrimeData, double>> CrimeHeap::getCrimes() {
+    return heap;
 }
 
 vector<pair<CrimeData, double>> CrimeHeap::getCrimesInRadius() {
